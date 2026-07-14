@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper to check if user is in the admins collection
+    function isAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Collection feedback
+    match /feedback/{feedbackId} {
+      allow create: if true; // public boleh hantar maklum balas
+      allow read, update, delete: if isAdmin(); // hanya admin boleh baca/urus
+    }
+
+    // Collection admins
+    match /admins/{adminId} {
+      allow read: if request.auth != null && request.auth.uid == adminId;
+      allow write: if false; // Tiada write daripada client demi keselamatan
+    }
+
+    // Collection locations
+    match /locations/{locationId} {
+      allow read: if true; // public boleh baca butiran lokasi untuk verification
+      allow write: if isAdmin(); // hanya admin berdaftar boleh urus lokasi
+    }
+  }
+}
