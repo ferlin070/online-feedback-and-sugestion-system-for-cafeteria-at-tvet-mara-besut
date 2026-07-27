@@ -263,6 +263,7 @@ function App() {
     const validation = validateDescription(formData.description, t)
     if (!validation.isValid) {
       setError(validation.error)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
@@ -304,6 +305,7 @@ function App() {
 
       setReferenceId(feedbackId)
       setPage('success')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       
       setFormData({
         category: 'Umum',
@@ -316,7 +318,8 @@ function App() {
       setPhotoPreview(null)
     } catch (err) {
       console.error('Error submitting feedback:', err)
-      setError('Gagal menghantar maklum balas. Sila cuba lagi.')
+      setError(`Gagal menghantar maklum balas: ${err.message || 'Sila cuba lagi.'}`)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setSubmitting(false)
     }
