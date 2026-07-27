@@ -726,9 +726,9 @@ function App() {
 
             {/* Screen 2: Feedback Form */}
             {page === 'form' && (
-              <div className="max-w-lg w-full glass-card p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-2xl space-y-6 my-6">
-                <div className="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                  <h2 className="text-xl sm:text-2xl font-bold font-display text-white">
+              <div className="max-w-lg w-full glass-card p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 my-6">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/60 pb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white">
                     {t('form.title')}
                   </h2>
                   <button
@@ -736,7 +736,7 @@ function App() {
                       setPage('home');
                       setError(null);
                     }}
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -745,14 +745,14 @@ function App() {
                 </div>
 
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
                     {error}
                   </div>
                 )}
 
                 <form onSubmit={handleSubmitFeedback} className="space-y-5">
                   <div className="space-y-1.5">
-                    <label htmlFor="category" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <label htmlFor="category" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                       {t('form.category')}
                     </label>
                     <select
@@ -760,22 +760,22 @@ function App() {
                       name="category"
                       value={formData.category}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-200 cursor-pointer"
+                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 text-base cursor-pointer bg-white dark:bg-slate-900"
                     >
-                      <option value="Umum">{t('categories.Umum')}</option>
-                      <option value="Makanan">{t('categories.Makanan')}</option>
-                      <option value="Kebersihan">{t('categories.Kebersihan')}</option>
-                      <option value="Kemudahan">{t('categories.Kemudahan')}</option>
-                      <option value="Perkhidmatan">{t('categories.Perkhidmatan')}</option>
+                      <option value="Umum" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Umum')}</option>
+                      <option value="Makanan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Makanan')}</option>
+                      <option value="Kebersihan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Kebersihan')}</option>
+                      <option value="Kemudahan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Kemudahan')}</option>
+                      <option value="Perkhidmatan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Perkhidmatan')}</option>
                     </select>
                   </div>
 
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center">
-                      <label htmlFor="description" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      <label htmlFor="description" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         {t('form.description')} <span className="text-sky-500">*</span>
                       </label>
-                      <span className={`text-xs ${formData.description.length > 500 ? 'text-red-400' : 'text-slate-500'}`}>
+                      <span className={`text-xs ${formData.description.length > 500 ? 'text-red-500 dark:text-red-400' : 'text-slate-500'}`}>
                         {formData.description.length}/500
                       </span>
                     </div>
@@ -788,24 +788,24 @@ function App() {
                       rows="4"
                       maxLength="500"
                       placeholder={t('form.description_placeholder')}
-                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-200 placeholder-slate-500 focus:ring-sky-500"
+                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500 text-base"
                     />
                   </div>
 
                   {currentLocation ? (
-                    <div className="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 text-sm font-medium flex items-center gap-3">
+                    <div className="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-sm font-medium flex items-center gap-3">
                       <svg className="w-5 h-5 animate-pulse shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                       <div>
-                        <span className="block text-[10px] uppercase text-slate-400 font-semibold tracking-wider">{t('locations.prefilled_info')}</span>
-                        <span className="text-base font-bold text-white">{currentLocation.name}</span>
+                        <span className="block text-[10px] uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">{t('locations.prefilled_info')}</span>
+                        <span className="text-base font-bold text-slate-900 dark:text-white">{currentLocation.name}</span>
                       </div>
                     </div>
                   ) : (
                     <div className="space-y-1.5">
-                      <label htmlFor="location" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      <label htmlFor="location" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         {t('form.location')}
                       </label>
                       <input
@@ -815,37 +815,37 @@ function App() {
                         value={formData.location}
                         onChange={handleInputChange}
                         placeholder={t('form.location_placeholder')}
-                        className="w-full px-4 py-3 rounded-xl glass-input text-slate-200 placeholder-slate-500 focus:ring-sky-500"
+                        className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500 text-base"
                       />
                     </div>
                   )}
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
+                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block">
                       {t('form.photo')}
                     </label>
                     
                     {!photoPreview ? (
                       <div 
                         onClick={() => fileInputRef.current.click()}
-                        className="border-2 border-dashed border-slate-800 hover:border-sky-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-950/20"
+                        className="border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-sky-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-100/50 dark:bg-slate-950/20"
                       >
-                        <svg className="w-8 h-8 text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-8 h-8 text-slate-400 dark:text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span className="text-xs text-slate-400">{t('form.photo_select', 'Klik untuk pilih gambar')}</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">{t('form.photo_select', 'Klik untuk pilih gambar')}</span>
                       </div>
                     ) : (
-                      <div className="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950/50 p-2 flex items-center gap-4">
-                        <img src={photoPreview} alt="Preview" className="w-16 h-16 object-cover rounded-lg border border-slate-800" />
+                      <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/50 p-2 flex items-center gap-4">
+                        <img src={photoPreview} alt="Preview" className="w-16 h-16 object-cover rounded-lg border border-slate-200 dark:border-slate-800" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-slate-300 truncate">{photo.name}</p>
+                          <p className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">{photo.name}</p>
                           <p className="text-[10px] text-slate-500">{(photo.size / (1024 * 1024)).toFixed(2)} MB</p>
                         </div>
                         <button
                           type="button"
                           onClick={handleRemovePhoto}
-                          className="p-2 hover:bg-slate-800/80 rounded-lg text-red-400 hover:text-red-300 transition-colors"
+                          className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800/80 rounded-lg text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors"
                           title={t('form.photo_remove')}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -873,18 +873,18 @@ function App() {
                       type="checkbox"
                       checked={formData.isAnonymous}
                       onChange={handleInputChange}
-                      className="w-4 h-4 rounded border-slate-800 text-sky-500 focus:ring-sky-500 focus:ring-offset-slate-950 bg-slate-950"
+                      className="w-4 h-4 rounded border-slate-300 dark:border-slate-800 text-sky-500 focus:ring-sky-500 focus:ring-offset-white dark:focus:ring-offset-slate-950 bg-white dark:bg-slate-950"
                     />
-                    <label htmlFor="isAnonymous" className="text-sm text-slate-400 cursor-pointer select-none">
+                    <label htmlFor="isAnonymous" className="text-sm text-slate-600 dark:text-slate-400 cursor-pointer select-none">
                       {t('form.anonymous')}
                     </label>
                   </div>
 
-                  <div className="flex gap-4 pt-4 border-t border-slate-900">
+                  <div className="flex gap-4 pt-4 border-t border-slate-200 dark:border-slate-900">
                     <button
                       type="button"
                       onClick={() => setPage('home')}
-                      className="flex-1 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl transition-colors border border-slate-800"
+                      className="flex-1 py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl transition-colors border border-slate-300 dark:border-slate-800 font-medium"
                     >
                       {t('form.back_btn')}
                     </button>
@@ -910,27 +910,27 @@ function App() {
 
             {/* Screen 3: Success Screen */}
             {page === 'success' && (
-              <div className="max-w-md w-full text-center space-y-6 glass-card p-8 sm:p-10 rounded-2xl border border-slate-800/80 shadow-2xl animate-fade-in my-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/5 mb-2">
+              <div className="max-w-md w-full text-center space-y-6 glass-card p-8 sm:p-10 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl animate-fade-in my-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/5 mb-2">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
 
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold font-display text-white">
+                  <h2 className="text-2xl font-bold font-display text-slate-900 dark:text-white">
                     {t('form.success_title')}
                   </h2>
-                  <p className="text-slate-400 text-sm">
+                  <p className="text-slate-600 dark:text-slate-400 text-sm">
                     {t('form.success_desc')}
                   </p>
                 </div>
 
-                <div className="bg-slate-950/50 border border-slate-800/80 rounded-xl p-4 space-y-2">
+                <div className="bg-slate-100/80 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-2">
                   <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">
                     {t('form.ref_id')}
                   </span>
-                  <div className="font-mono text-base font-semibold text-sky-400 select-all">
+                  <div className="font-mono text-base font-semibold text-sky-600 dark:text-sky-400 select-all">
                     {referenceId}
                   </div>
                   <p className="text-[10px] text-slate-500">
@@ -941,7 +941,7 @@ function App() {
                 <div className="pt-2">
                   <button
                     onClick={() => setPage('form')}
-                    className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl transition-colors border border-slate-800"
+                    className="w-full btn-primary py-3 flex justify-center items-center"
                   >
                     {t('form.new_submission_btn')}
                   </button>
@@ -951,25 +951,25 @@ function App() {
 
             {/* Screen 4: Admin Login Screen */}
             {page === 'admin-login' && (
-              <div className="max-w-md w-full glass-card p-8 rounded-2xl border border-slate-800 shadow-2xl space-y-6 my-8">
+              <div className="max-w-md w-full glass-card p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 my-8">
                 <div className="text-center space-y-2">
-                  <h2 className="text-2xl font-bold font-display text-white">
+                  <h2 className="text-2xl font-bold font-display text-slate-900 dark:text-white">
                     {t('login.title')}
                   </h2>
-                  <p className="text-slate-400 text-sm">
+                  <p className="text-slate-600 dark:text-slate-400 text-sm">
                     {t('login.subtitle', 'Sila log masuk menggunakan emel dan kata laluan admin anda.')}
                   </p>
                 </div>
 
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm text-center">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm text-center">
                     {error}
                   </div>
                 )}
 
                 <form onSubmit={handleAdminSignIn} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label htmlFor="email" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <label htmlFor="email" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                       {t('login.email')}
                     </label>
                     <input
@@ -979,12 +979,12 @@ function App() {
                       onChange={(e) => setLoginEmail(e.target.value)}
                       required
                       placeholder="admin@kafe-tvet.com"
-                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-200 placeholder-slate-500 focus:ring-sky-500"
+                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500 text-base"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="password" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <label htmlFor="password" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                       {t('login.password')}
                     </label>
                     <input
@@ -994,7 +994,7 @@ function App() {
                       onChange={(e) => setLoginPassword(e.target.value)}
                       required
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-200 placeholder-slate-500 focus:ring-sky-500"
+                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500 text-base"
                     />
                   </div>
 
@@ -1007,7 +1007,7 @@ function App() {
                         setError(null);
                         setPage('home');
                       }}
-                      className="flex-1 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl transition-colors border border-slate-800"
+                      className="flex-1 py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl transition-colors border border-slate-300 dark:border-slate-800 font-medium"
                     >
                       {t('form.back_btn')}
                     </button>
