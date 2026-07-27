@@ -123,15 +123,13 @@ function App() {
         }
       } else {
         setAdminUser(null)
-        if (page === 'admin-dashboard') {
-          setPage('admin-login')
-        }
+        setPage(prev => (prev === 'admin-dashboard' ? 'admin-login' : prev))
       }
       setAuthLoading(false)
     })
 
     return () => unsubscribe()
-  }, [page])
+  }, [])
 
   // 2. Real-time Feedback Subscription
   useEffect(() => {
@@ -181,6 +179,7 @@ function App() {
     const params = new URLSearchParams(window.location.search)
     const locId = params.get('loc')
     if (locId) {
+      setPage('form')
       const locRef = doc(db, 'locations', locId)
       getDoc(locRef).then((snap) => {
         if (snap.exists() && snap.data().active) {
@@ -191,10 +190,22 @@ function App() {
             locationId: locId,
             location: locData.name
           }))
-          setPage('form')
+        } else {
+          setCurrentLocation({ id: locId, name: locId })
+          setFormData(prev => ({
+            ...prev,
+            locationId: locId,
+            location: locId
+          }))
         }
       }).catch((err) => {
         console.error('Error fetching location from QR code URL:', err)
+        setCurrentLocation({ id: locId, name: locId })
+        setFormData(prev => ({
+          ...prev,
+          locationId: locId,
+          location: locId
+        }))
       })
     }
   }, [])
@@ -675,10 +686,10 @@ function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col justify-center items-center p-4 relative z-0">
+      <main className="flex-1 flex flex-col items-center justify-start sm:justify-center p-3 sm:p-6 relative z-0 overflow-y-auto w-full">
         
         {authLoading ? (
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-3 py-12">
             <svg className="animate-spin h-8 w-8 text-sky-500" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -689,7 +700,7 @@ function App() {
           <>
             {/* Screen 1: Welcome Page */}
             {page === 'home' && (
-              <div className="max-w-xl w-full text-center space-y-8 glass-card p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl animate-fade-in my-8">
+              <div className="max-w-xl w-full text-center space-y-8 glass-card p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl animate-fade-in my-4 sm:my-8">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-500 text-white shadow-xl shadow-sky-500/10">
                   <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -726,7 +737,7 @@ function App() {
 
             {/* Screen 2: Feedback Form */}
             {page === 'form' && (
-              <div className="max-w-lg w-full glass-card p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 my-6">
+              <div className="max-w-lg w-full glass-card p-5 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 my-4 sm:my-6 overflow-hidden">
                 <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/60 pb-4">
                   <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white">
                     {t('form.title')}
@@ -787,8 +798,10 @@ function App() {
                       required
                       rows="4"
                       maxLength="500"
+                      autoCapitalize="sentences"
+                      autoCorrect="on"
                       placeholder={t('form.description_placeholder')}
-                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500 text-base"
+                      className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-sky-500 text-base transition-colors resize-y min-h-[120px]"
                     />
                   </div>
 
@@ -826,15 +839,15 @@ function App() {
                     </label>
                     
                     {!photoPreview ? (
-                      <div 
-                        onClick={() => fileInputRef.current.click()}
+                      <label 
+                        htmlFor="photo"
                         className="border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-sky-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-100/50 dark:bg-slate-950/20"
                       >
                         <svg className="w-8 h-8 text-slate-400 dark:text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         <span className="text-xs text-slate-500 dark:text-slate-400">{t('form.photo_select', 'Klik untuk pilih gambar')}</span>
-                      </div>
+                      </label>
                     ) : (
                       <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/50 p-2 flex items-center gap-4">
                         <img src={photoPreview} alt="Preview" className="w-16 h-16 object-cover rounded-lg border border-slate-200 dark:border-slate-800" />
