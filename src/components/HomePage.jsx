@@ -9,14 +9,14 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center">
           {/* Left: editorial intro */}
           <div className="md:col-span-3 space-y-6">
-            <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-clay-500">
-              <span className="w-6 h-px bg-clay-400" />
+            <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-mara-blue-500">
+              <span className="w-6 h-px bg-mara-blue-400" />
               {t('home.eyebrow', 'Kafeteria TVET MARA Besut')}
             </span>
 
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-[var(--heading-color)]">
               {t('home.title_a', 'Suara anda,')}{' '}
-              <em className="not-italic text-clay-600 dark:text-clay-400 font-display italic">
+              <em className="not-italic text-mara-blue-600 dark:text-mara-blue-400 font-display italic">
                 {t('home.title_b', 'mendapat sambutan.')}
               </em>
             </h1>
@@ -38,7 +38,7 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
               {onTrackStatus && (
                 <button
                   onClick={onTrackStatus}
-                  className="px-5 py-3 text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-clay-600 dark:hover:text-clay-400 transition-colors cursor-pointer"
+                  className="px-5 py-3 text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-mara-blue-600 dark:hover:text-mara-blue-400 transition-colors cursor-pointer"
                 >
                   {t('track.btn_title', 'Semak Status Aduan')} →
                 </button>
@@ -49,7 +49,7 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
           {/* Right: meta card — posted notice */}
           <aside className="md:col-span-2">
             <div className="card-warm p-5 sm:p-6 relative">
-              <div className="absolute -top-2 left-6 px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest bg-clay-500 text-sand-50 rounded-sm rotate-[-1.5deg] shadow-sm">
+              <div className="absolute -top-2 left-6 px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest bg-mara-blue-500 text-sand-50 rounded-sm rotate-[-1.5deg] shadow-sm">
                 {t('home.notice_tag', 'Notis')}
               </div>
               <p className="font-display text-[15px] leading-snug text-[var(--heading-color)] mt-2">
@@ -61,7 +61,7 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
               <hr className="rule-hand my-4" />
               <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-ink-400">
                 <span>TVET MARA Besut</span>
-                <span className="text-clay-500">v1.0</span>
+                <span className="text-mara-blue-500">v1.0</span>
               </div>
             </div>
           </aside>
@@ -70,7 +70,7 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
         {/* Strip maklumat di bawah hero */}
         <div className="mt-12 sm:mt-16 pt-6 border-t border-[var(--border-color)] grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex items-start gap-3">
-            <span className="w-8 h-8 rounded-md bg-clay-100 dark:bg-clay-900/40 text-clay-600 dark:text-clay-400 grid place-items-center shrink-0">
+            <span className="w-8 h-8 rounded-md bg-mara-blue-100 dark:bg-mara-blue-900/40 text-mara-blue-600 dark:text-mara-blue-400 grid place-items-center shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -81,7 +81,7 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <span className="w-8 h-8 rounded-md bg-olive-100 dark:bg-olive-900/40 text-olive-600 dark:text-olive-300 grid place-items-center shrink-0">
+            <span className="w-8 h-8 rounded-md bg-mara-cyan-100 dark:bg-mara-cyan-900/40 text-mara-cyan-600 dark:text-mara-cyan-300 grid place-items-center shrink-0">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>

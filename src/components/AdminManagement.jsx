@@ -118,7 +118,7 @@ export function AdminManagement({ adminUser }) {
             <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('admin.mgmt_list_title', 'Senarai Admin')}</h3>
             <p className="text-[11px] text-ink-400 mt-0.5">{admins.length} {t('admin.mgmt_count', 'admin berdaftar')}</p>
           </div>
-          <button onClick={loadAdmins} disabled={loading} className="px-3 py-1.5 text-[11px] font-medium rounded-sm border border-[var(--border-color)] text-ink-500 hover:text-clay-600 hover:border-clay-300 dark:hover:text-clay-400 transition-colors cursor-pointer">
+          <button onClick={loadAdmins} disabled={loading} className="px-3 py-1.5 text-[11px] font-medium rounded-sm border border-[var(--border-color)] text-ink-500 hover:text-mara-blue-600 hover:border-mara-blue-300 dark:hover:text-mara-blue-400 transition-colors cursor-pointer">
             {t('admin.mgmt_btn_refresh', 'Segar')}
           </button>
         </div>
@@ -143,7 +143,7 @@ export function AdminManagement({ adminUser }) {
                     <td className="py-3 px-3 text-ink-400">{admin.email}</td>
                     <td className="py-3 px-3">
                       {admin.role === 'superadmin' ? (
-                        <span className="inline-flex px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-clay-300 dark:border-clay-800 bg-clay-100 dark:bg-clay-900/40 text-clay-700 dark:text-clay-300">
+                        <span className="inline-flex px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-mara-blue-300 dark:border-mara-blue-800 bg-mara-blue-100 dark:bg-mara-blue-900/40 text-mara-blue-700 dark:text-mara-blue-300">
                           Super Admin
                         </span>
                       ) : (

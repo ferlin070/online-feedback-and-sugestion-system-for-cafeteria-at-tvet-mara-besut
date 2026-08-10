@@ -85,8 +85,8 @@ export function FeedbackList({ feedbacks, selectedFeedback, onSelectFeedback, fi
               onClick={() => onSelectFeedback(fb)}
               className={`w-full text-left p-3.5 rounded-md border transition-all cursor-pointer flex gap-3 ${
                 selectedFeedback?.id === fb.id
-                  ? 'border-clay-400 bg-clay-50 dark:bg-clay-900/25'
-                  : 'border-[var(--border-color)] hover:border-clay-300 hover:bg-sand-50/60 dark:hover:bg-ink-900/40'
+                  ? 'border-mara-blue-400 bg-mara-blue-50 dark:bg-mara-blue-900/25'
+                  : 'border-[var(--border-color)] hover:border-mara-blue-300 hover:bg-sand-50/60 dark:hover:bg-ink-900/40'
               }`}
             >
               <div className="flex-1 min-w-0 space-y-1.5">

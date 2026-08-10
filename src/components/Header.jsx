@@ -1,42 +1,15 @@
 import { useTranslation } from 'react-i18next';
 
 function TVETMARALogo({ className = '' }) {
-  // Logo SVG tersuai: perisai/bukit dengan inisial T (TVET) + daun (MARA - pertumbuhan)
+  // Gunakan logo PNG rasmi TVETMARA Besut
   return (
-    <svg
-      className={className}
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      {/* Latar bulat */}
-      <circle cx="20" cy="20" r="19" fill="#B5651D" />
-      <circle cx="20" cy="20" r="19" stroke="#945016" strokeWidth="1.5" />
-      {/* Bentuk bukit (Besut - kawasan pesisir) */}
-      <path d="M6 28 L14 18 L20 24 L28 14 L34 28 Z" fill="#FFFCF6" opacity="0.95" />
-      {/* Daun (MARA - pembangunan) */}
-      <path
-        d="M20 10 C 17 12, 16 16, 18 19 C 20 16, 22 14, 24 13 C 23 11, 21 10, 20 10 Z"
-        fill="#6B7B3C"
-      />
-      {/* Garis ombak di bawah bukit */}
-      <path
-        d="M6 30 Q 10 28, 14 30 T 22 30 T 30 30 T 34 30"
-        stroke="#EAD2BC"
-        strokeWidth="1.2"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 33 Q 10 31, 14 33 T 22 33 T 30 33 T 34 33"
-        stroke="#DDB49A"
-        strokeWidth="1"
-        fill="none"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-    </svg>
+    <img
+      src="/TVETMARA_Besut-logo.png"
+      alt="Logo TVETMARA Besut"
+      className={`${className} object-contain`}
+      loading="eager"
+      decoding="async"
+    />
   );
 }
 
@@ -52,12 +25,12 @@ export function Header({ theme, toggleTheme, adminUser, onNavigateHome, onNaviga
             onClick={onNavigateHome}
             className={`flex items-center gap-2.5 group ${adminUser ? 'cursor-default' : 'cursor-pointer'}`}
           >
-            <TVETMARALogo className="w-9 h-9 shrink-0" />
+            <TVETMARALogo className="h-9 w-auto shrink-0" />
             <span className="flex flex-col leading-tight">
               <span className="font-display text-[15px] font-semibold tracking-tight text-[var(--heading-color)]">
                 Sistem Aduan
               </span>
-              <span className="text-[9px] font-mono uppercase tracking-[0.18em] text-clay-500">
+              <span className="text-[9px] font-mono uppercase tracking-[0.18em]" style={{ color: 'var(--primary)' }}>
                 TVETMARA Besut
               </span>
             </span>
@@ -67,7 +40,7 @@ export function Header({ theme, toggleTheme, adminUser, onNavigateHome, onNaviga
             <button
               onClick={toggleTheme}
               aria-label="Togol tema"
-              className="w-9 h-9 grid place-items-center rounded-md border border-[var(--border-color)] text-ink-500 hover:text-clay-500 hover:border-clay-300 transition-colors cursor-pointer"
+              className="w-9 h-9 grid place-items-center rounded-md border border-[var(--border-color)] text-ink-500 hover:text-mara-blue-500 hover:border-mara-blue-300 transition-colors cursor-pointer"
             >
               {theme === 'dark' ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -89,7 +62,7 @@ export function Header({ theme, toggleTheme, adminUser, onNavigateHome, onNaviga
                   aria-pressed={i18n.language === lang}
                   className={`px-2 py-1 text-[11px] font-semibold rounded uppercase tracking-wide transition-colors ${
                     i18n.language === lang
-                      ? 'bg-clay-500 text-sand-50'
+                      ? 'bg-mara-blue-500 text-sand-50'
                       : 'text-ink-400 hover:text-ink-700 dark:hover:text-ink-200'
                   }`}
                 >
@@ -108,7 +81,7 @@ export function Header({ theme, toggleTheme, adminUser, onNavigateHome, onNaviga
                 </div>
                 <button
                   onClick={onLogout}
-                  className="px-3 py-1.5 text-xs font-medium rounded-md border border-[var(--border-color)] text-ink-500 hover:text-red-600 hover:border-red-300 dark:hover:text-red-400 dark:hover:border-red-500/40 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-medium rounded-md border border-[var(--border-color)] text-ink-500 hover:text-mara-red-500 hover:border-mara-red-300 transition-colors cursor-pointer"
                 >
                   {t('common.logout')}
                 </button>
@@ -116,7 +89,7 @@ export function Header({ theme, toggleTheme, adminUser, onNavigateHome, onNaviga
             ) : (
               <button
                 onClick={onNavigateLogin}
-                className="px-3 py-1.5 text-xs font-medium rounded-md text-ink-500 hover:text-clay-600 dark:hover:text-clay-400 transition-colors cursor-pointer"
+                className="px-3 py-1.5 text-xs font-medium rounded-md text-ink-500 hover:text-mara-blue-600 dark:hover:text-mara-blue-400 transition-colors cursor-pointer"
               >
                 {t('common.admin_portal')}
               </button>

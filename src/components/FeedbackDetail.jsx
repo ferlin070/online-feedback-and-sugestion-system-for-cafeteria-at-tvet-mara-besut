@@ -103,7 +103,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
             <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
               {t('locations.filter_label')}
             </p>
-            <p className="text-clay-600 dark:text-clay-400 mt-0.5 flex items-center gap-1">
+            <p className="text-mara-blue-600 dark:text-mara-blue-400 mt-0.5 flex items-center gap-1">
               <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" />
               </svg>

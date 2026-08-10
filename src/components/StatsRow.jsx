@@ -4,8 +4,8 @@ export function StatsRow({ stats }) {
   const { t } = useTranslation();
   const items = [
     { label: t('reports.summary_total'), value: stats.total, accent: 'text-[var(--heading-color)]', dot: 'bg-ink-300' },
-    { label: t('reports.summary_new'), value: stats.newCount, accent: 'text-clay-600 dark:text-clay-400', dot: 'bg-clay-400' },
-    { label: t('reports.summary_under_review'), value: stats.reviewCount, accent: 'text-olive-600 dark:text-olive-300', dot: 'bg-olive-400' },
+    { label: t('reports.summary_new'), value: stats.newCount, accent: 'text-mara-blue-600 dark:text-mara-blue-400', dot: 'bg-mara-blue-400' },
+    { label: t('reports.summary_under_review'), value: stats.reviewCount, accent: 'text-mara-cyan-600 dark:text-mara-cyan-300', dot: 'bg-mara-cyan-400' },
     { label: t('reports.summary_resolved'), value: stats.resolvedCount, accent: 'text-ink-500', dot: 'bg-ink-300' },
   ];
 

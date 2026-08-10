@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next';
 
 const STATUS_STYLES = {
-  new: 'bg-clay-100 text-clay-700 border-clay-300 dark:bg-clay-900/40 dark:text-clay-300 dark:border-clay-800',
-  under_review: 'bg-olive-100 text-olive-700 border-olive-300 dark:bg-olive-900/40 dark:text-olive-300 dark:border-olive-800',
+  new: 'bg-mara-blue-100 text-mara-blue-700 border-mara-blue-300 dark:bg-mara-blue-900/40 dark:text-mara-blue-300 dark:border-mara-blue-800',
+  under_review: 'bg-mara-cyan-100 text-mara-cyan-700 border-mara-cyan-300 dark:bg-mara-cyan-900/40 dark:text-mara-cyan-300 dark:border-mara-cyan-800',
   resolved: 'bg-ink-100 text-ink-600 border-ink-200 dark:bg-ink-800/50 dark:text-ink-200 dark:border-ink-700',
 };
 
 const PRIORITY_STYLES = {
   high: 'bg-red-50 text-red-700 border-red-300 dark:bg-red-500/15 dark:text-red-400 dark:border-red-500/40',
-  medium: 'bg-clay-50 text-clay-700 border-clay-200 dark:bg-clay-900/30 dark:text-clay-300 dark:border-clay-800',
+  medium: 'bg-mara-blue-50 text-mara-blue-700 border-mara-blue-200 dark:bg-mara-blue-900/30 dark:text-mara-blue-300 dark:border-mara-blue-800',
   low: 'bg-ink-50 text-ink-500 border-ink-200 dark:bg-ink-800/40 dark:text-ink-400 dark:border-ink-700',
 };
 

@@ -32,7 +32,7 @@ export function AdminLoginPage({ onLogin, onBack, authError }) {
     <section className="w-full max-w-sm mx-auto py-12 px-1">
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-1.5 text-[12px] text-ink-400 hover:text-clay-600 dark:hover:text-clay-400 transition-colors mb-6 cursor-pointer"
+        className="inline-flex items-center gap-1.5 text-[12px] text-ink-400 hover:text-mara-blue-600 dark:hover:text-mara-blue-400 transition-colors mb-6 cursor-pointer"
       >
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M11 18l-6-6 6-6" />
@@ -41,7 +41,7 @@ export function AdminLoginPage({ onLogin, onBack, authError }) {
       </button>
 
       <div className="mb-7">
-        <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-clay-500">
+        <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-mara-blue-500">
           {t('login.eyebrow', 'Akses Terhad')}
         </span>
         <h1 className="font-display text-3xl tracking-tight text-[var(--heading-color)] mt-1">

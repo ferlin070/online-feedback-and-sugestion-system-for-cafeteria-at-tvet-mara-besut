@@ -112,14 +112,14 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
                     <td className="py-3 px-3 font-mono text-[10px] text-ink-400">{loc.id}</td>
                     <td className="py-2 px-3">
                       {loc.qrCodeUrl && (
-                        <a href={loc.qrCodeUrl} target="_blank" rel="noopener noreferrer" className="block w-10 h-10 p-0.5 rounded-sm bg-white border border-[var(--border-color)] hover:border-clay-400 transition-colors">
+                        <a href={loc.qrCodeUrl} target="_blank" rel="noopener noreferrer" className="block w-10 h-10 p-0.5 rounded-sm bg-white border border-[var(--border-color)] hover:border-mara-blue-400 transition-colors">
                           <img src={loc.qrCodeUrl} alt={loc.name} className="w-full h-full object-contain" />
                         </a>
                       )}
                     </td>
                     <td className="py-3 px-3">
                       {loc.active ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-olive-300 dark:border-olive-800 bg-olive-100 dark:bg-olive-900/40 text-olive-700 dark:text-olive-300">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-mara-cyan-300 dark:border-mara-cyan-800 bg-mara-cyan-100 dark:bg-mara-cyan-900/40 text-mara-cyan-700 dark:text-mara-cyan-300">
                           {t('locations.status_active')}
                         </span>
                       ) : (
@@ -131,13 +131,13 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
                     <td className="py-3 pl-3 text-right whitespace-nowrap">
                       <button
                         onClick={() => onToggleStatus(loc)}
-                        className="px-2 py-1 text-[10px] font-medium rounded-sm border border-[var(--border-color)] text-ink-500 hover:text-clay-600 hover:border-clay-300 dark:hover:text-clay-400 transition-colors cursor-pointer"
+                        className="px-2 py-1 text-[10px] font-medium rounded-sm border border-[var(--border-color)] text-ink-500 hover:text-mara-blue-600 hover:border-mara-blue-300 dark:hover:text-mara-blue-400 transition-colors cursor-pointer"
                       >
                         {loc.active ? t('locations.deactivate') : t('locations.activate')}
                       </button>
                       <button
                         onClick={() => onDownloadQR(loc)}
-                        className="ml-1 px-2 py-1 text-[10px] font-medium rounded-sm border border-clay-300 dark:border-clay-800 text-clay-600 dark:text-clay-400 hover:bg-clay-50 dark:hover:bg-clay-900/30 transition-colors cursor-pointer"
+                        className="ml-1 px-2 py-1 text-[10px] font-medium rounded-sm border border-mara-blue-300 dark:border-mara-blue-800 text-mara-blue-600 dark:text-mara-blue-400 hover:bg-mara-blue-50 dark:hover:bg-mara-blue-900/30 transition-colors cursor-pointer"
                       >
                         {t('locations.download_qr')}
                       </button>
