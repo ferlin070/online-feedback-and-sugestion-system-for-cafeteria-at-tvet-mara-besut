@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Palette rasmi MARA (navy + biru + merah + emas) */
+  /* Palet TVETMARA Besut (diambil dari logo rasmi) */
+  /* Navy utama MARA */
   --color-mara-navy-50: #F0F2FA;
   --color-mara-navy-100: #DCE1F0;
   --color-mara-navy-200: #B6C0E0;
@@ -16,6 +17,7 @@
   --color-mara-navy-800: #0C0A26;
   --color-mara-navy-900: #060519;
 
+  /* Biru (sekunder) */
   --color-mara-blue-50: #EEF4FB;
   --color-mara-blue-100: #D2E1F2;
   --color-mara-blue-200: #A8C2E4;
@@ -24,7 +26,20 @@
   --color-mara-blue-500: #19377B;
   --color-mara-blue-600: #142D67;
   --color-mara-blue-700: #0F2152;
+  --color-mara-blue-800: #0A1740;
+  --color-mara-blue-900: #050B26;
 
+  /* Biru terang (aksen CTA) */
+  --color-mara-cyan-50: #ECF6FD;
+  --color-mara-cyan-100: #C8E8F8;
+  --color-mara-cyan-200: #92D2EF;
+  --color-mara-cyan-300: #54B5E2;
+  --color-mara-cyan-400: #1E96CF;
+  --color-mara-cyan-500: #0E7AAD;
+  --color-mara-cyan-600: #0A6189;
+  --color-mara-cyan-700: #074D6E;
+
+  /* Merah aksen (dari logo) */
   --color-mara-red-50: #FCEDED;
   --color-mara-red-100: #F5D0D0;
   --color-mara-red-200: #E89F9F;
@@ -34,58 +49,55 @@
   --color-mara-red-600: #80080B;
   --color-mara-red-700: #600508;
 
-  /* Emas (aksen formal kerajaan) */
-  --color-mara-gold-50: #FDF8EC;
-  --color-mara-gold-100: #FAEDC8;
-  --color-mara-gold-200: #F4D885;
-  --color-mara-gold-300: #E9C04A;
-  --color-mara-gold-400: #D4A020;
-  --color-mara-gold-500: #B45309;
-  --color-mara-gold-600: #8C3F07;
+  /* Pasir/sand (neutral hangat) */
+  --color-sand-50: #FAF7F1;
+  --color-sand-100: #F2ECDF;
+  --color-sand-200: #E5DBC5;
+  --color-sand-300: #D4C4A8;
+  --color-sand-400: #BFAE8C;
+  --color-sand-500: #A89474;
 
-  /* Neutral sejuk (gov style) */
-  --color-mara-gray-50: #F8FAFC;
-  --color-mara-gray-100: #F1F5F9;
-  --color-mara-gray-200: #E2E8F0;
-  --color-mara-gray-300: #CBD5E1;
-  --color-mara-gray-400: #94A3B8;
-  --color-mara-gray-500: #64748B;
-  --color-mara-gray-600: #475569;
-  --color-mara-gray-700: #334155;
-  --color-mara-gray-800: #1E293B;
-  --color-mara-gray-900: #0F172A;
+  /* Ink (teks gelap) */
+  --color-ink-50: #F6F5F3;
+  --color-ink-100: #E7E5E0;
+  --color-ink-200: #C9C5BC;
+  --color-ink-300: #A39D90;
+  --color-ink-400: #7A7368;
+  --color-ink-500: #5C564B;
+  --color-ink-600: #46413A;
+  --color-ink-700: #322F29;
+  --color-ink-800: #1F1D1A;
+  --color-ink-900: #121110;
 
-  --font-sans: 'Lato', system-ui, sans-serif;
-  --font-display: 'EB Garamond', Georgia, serif;
-  --font-mono: ui-monospace, 'Courier New', monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 :root {
-  --bg-color: #F8FAFC;
-  --bg-elev: #FFFFFF;
-  --text-color: #334155;
-  --heading-color: #0F172A;
-  --border-color: #E2E8F0;
-  --muted-color: #64748B;
+  --bg-color: #FAF7F1;
+  --bg-elev: #FFFCF6;
+  --text-color: #322F29;
+  --heading-color: #1C1950;
+  --border-color: #E5DBC5;
+  --muted-color: #7A7368;
   --primary: #19377B;
   --primary-hover: #142D67;
   --primary-soft: #EEF4FB;
   --accent: #9D0B0F;
-  --gold: #B45309;
 }
 
 :root.dark {
   --bg-color: #060519;
   --bg-elev: #0C0A26;
-  --text-color: #CBD5E1;
-  --heading-color: #F8FAFC;
+  --text-color: #C9C5BC;
+  --heading-color: #F6F5F3;
   --border-color: #1C1950;
-  --muted-color: #94A3B8;
-  --primary: #6F95CC;
-  --primary-hover: #A8C2E4;
+  --muted-color: #A39D90;
+  --primary: #54B5E2;
+  --primary-hover: #92D2EF;
   --primary-soft: #14113B;
   --accent: #D76666;
-  --gold: #E9C04A;
 }
 
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -95,130 +107,118 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--heading-color);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
-/* Surface putih bersih (gov style) */
-.gov-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.gov-card:hover {
-  border-color: #B6C0E0;
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.10);
-}
-.dark .gov-card {
-  background-color: #0C0A26;
-  border-color: #1C1950;
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
-}
-.dark .gov-card:hover {
-  border-color: #262261;
-  box-shadow: 0 4px 12px -2px rgba(0,0,0,0.5);
+/* Paper-grain texture — human imperfection */
+.paper-grain { position: relative; }
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0 0.38  0 0 0 0.03 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+  opacity: 0.6;
 }
 
-/* Input — clean, gov */
-.gov-input {
-  background-color: #FFFFFF;
-  border: 1px solid #CBD5E1;
-  color: #0F172A;
-  border-radius: 6px;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+/* Card — warm, tactile (not glassy) */
+.card-warm {
+  background-color: #FFFCF6;
+  border: 1px solid #E5DBC5;
+  border-radius: 14px;
+  box-shadow: 0 1px 0 0 #F2ECDF, 0 12px 24px -16px rgba(28, 25, 80, 0.18);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-warm:hover {
+  border-color: #B6C0E0;
+  box-shadow: 0 1px 0 0 #F2ECDF, 0 18px 32px -18px rgba(28, 25, 80, 0.25);
+}
+.dark .card-warm {
+  background-color: #0C0A26;
+  border-color: #1C1950;
+  box-shadow: 0 1px 0 0 #14113B, 0 16px 28px -18px rgba(0, 0, 0, 0.6);
+}
+.dark .card-warm:hover {
+  border-color: #262261;
+  box-shadow: 0 1px 0 0 #14113B, 0 22px 36px -20px rgba(0, 0, 0, 0.7);
+}
+
+/* Input — grounded, no glow halo */
+.input-warm {
+  background-color: #FFFCF6;
+  border: 1px solid #D4C4A8;
+  color: #1F1D1A;
+  border-radius: 10px;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
-.gov-input:focus {
+.input-warm:focus {
   border-color: #19377B;
-  box-shadow: 0 0 0 3px rgba(25, 55, 123, 0.15);
-  outline: 2px solid transparent;
+  background-color: #FFFFFF;
+  outline: 2px solid #A8C2E4;
+  outline-offset: 1px;
 }
-.dark .gov-input {
+.dark .input-warm {
   background-color: #060519;
   border-color: #1C1950;
-  color: #F1F5F9;
+  color: #E7E5E0;
 }
-.dark .gov-input:focus {
-  border-color: #6F95CC;
-  box-shadow: 0 0 0 3px rgba(111, 149, 204, 0.2);
+.dark .input-warm:focus {
+  border-color: #54B5E2;
+  background-color: #0C0A26;
+  outline-color: #262261;
 }
 
-/* Primary action — navy button */
-.btn-mara {
+/* Primary action — navy button (warna logo MARA) */
+.btn-clay {
   background-color: #19377B;
-  color: #FFFFFF;
-  font-weight: 700;
-  border-radius: 6px;
+  color: #FFFCF6;
+  font-weight: 600;
+  border-radius: 10px;
   border: 1px solid #142D67;
-  transition: background-color 0.18s ease, transform 0.12s ease;
-  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.2);
+  transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+  box-shadow: 0 1px 0 0 #0F2152, 0 6px 14px -8px rgba(15, 33, 82, 0.5);
 }
-.btn-mara:hover {
+.btn-clay:hover {
   background-color: #142D67;
-  box-shadow: 0 2px 4px 0 rgba(15, 23, 42, 0.3);
+  box-shadow: 0 1px 0 0 #0A1740, 0 10px 18px -8px rgba(15, 33, 82, 0.6);
 }
-.btn-mara:active { transform: translateY(1px); }
-.btn-mara:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
-
-/* Aksen merah button */
-.btn-mara-red {
-  background-color: #9D0B0F;
-  color: #FFFFFF;
-  font-weight: 700;
-  border-radius: 6px;
-  border: 1px solid #80080B;
-  transition: background-color 0.18s ease;
-  box-shadow: 0 1px 2px 0 rgba(157, 11, 15, 0.3);
+.btn-clay:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 0 #0A1740;
 }
-.btn-mara-red:hover { background-color: #80080B; }
-.btn-mara-red:active { transform: translateY(1px); }
-.btn-mara-red:disabled { opacity: 0.55; cursor: not-allowed; }
-
-/* Secondary outline button */
-.btn-mara-outline {
-  background-color: transparent;
-  color: #19377B;
-  font-weight: 700;
-  border-radius: 6px;
-  border: 1.5px solid #19377B;
-  transition: background-color 0.18s ease, color 0.18s ease;
-}
-.btn-mara-outline:hover {
-  background-color: #19377B;
-  color: #FFFFFF;
-}
-.dark .btn-mara-outline {
-  color: #A8C2E4;
-  border-color: #A8C2E4;
-}
-.dark .btn-mara-outline:hover {
-  background-color: #A8C2E4;
-  color: #060519;
+.btn-clay:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* Pembahagi gold tipis */
-.rule-gold {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #B45309, transparent);
+/* Hand-drawn divider — small human imperfection */
+.rule-hand {
+  height: 1px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='6' viewBox='0 0 120 6'><path d='M0,3 Q30,1 60,3 T120,3' fill='none' stroke='%2319377B' stroke-width='1.2' stroke-linecap='round'/></svg>");
+  background-repeat: repeat-x;
+  background-position: center;
   border: 0;
 }
 
-/* Animasi entrance halus */
+/* Subtle entrance — never bouncy */
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-in { animation: fade-in-up 0.35s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.animate-fade-in { animation: fade-in-up 0.32s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -228,17 +228,18 @@ h1, h2, h3, h4 {
   }
 }
 
-/* Selection */
-::selection { background: #D2E1F2; color: #0F172A; }
-.dark ::selection { background: #262261; color: #F8FAFC; }
+/* Selection — navy, not blue browser default */
+::selection { background: #D2E1F2; color: #0F2152; }
+.dark ::selection { background: #262261; color: #F6F5F3; }
 
-/* Scrollbar */
-* { scrollbar-width: thin; scrollbar-color: #94A3B8 transparent; }
+/* Scrollbar — quiet */
+* { scrollbar-width: thin; scrollbar-color: #B6C0E0 transparent; }
 .dark * { scrollbar-color: #262261 transparent; }
-*::-webkit-scrollbar { width: 10px; height: 10px; }
-*::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 5px; border: 2px solid var(--bg-color); }
-.dark *::-webkit-scrollbar-thumb { background: #1C1950; border-color: #060519; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: #B6C0E0; border-radius: 4px; }
+.dark *::-webkit-scrollbar-thumb { background: #262261; }
 
+/* Utility — clamp text lines */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -247,17 +248,16 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================
-   SISTEM ADUAN TVETMARA BESUT — Background
-   Reka bentuk: hero banner + block-based (mara.gov.my style)
+   TVETMARA BESUT — Background cantik
+   Palette mengikut logo rasmi (navy + biru + merah)
    ============================================ */
 
 .bg-tvetmara {
   position: relative;
   isolation: isolate;
-  min-height: 100vh;
 }
 
-/* Lapisan 1: Gradient ambient lembut (navy + merah) */
+/* Lapisan 1: Ambient gradient blobs (lembut, bergerak perlahan) */
 .bg-tvetmara::before {
   content: "";
   position: fixed;
@@ -265,56 +265,86 @@ h1, h2, h3, h4 {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 50% 40% at 80% 0%, rgba(25, 55, 123, 0.08), transparent 60%),
-    radial-gradient(ellipse 40% 35% at 0% 100%, rgba(157, 11, 15, 0.05), transparent 60%);
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(25, 55, 123, 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 85% 80%, rgba(157, 11, 15, 0.08), transparent 60%),
+    radial-gradient(ellipse 40% 35% at 70% 15%, rgba(38, 34, 97, 0.10), transparent 60%);
+  animation: ambient-drift 28s ease-in-out infinite alternate;
 }
 .dark .bg-tvetmara::before {
   background:
-    radial-gradient(ellipse 50% 40% at 80% 0%, rgba(111, 149, 204, 0.10), transparent 60%),
-    radial-gradient(ellipse 40% 35% at 0% 100%, rgba(157, 11, 15, 0.12), transparent 60%);
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(84, 181, 226, 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 85% 80%, rgba(157, 11, 15, 0.18), transparent 60%),
+    radial-gradient(ellipse 40% 35% at 70% 15%, rgba(38, 34, 97, 0.20), transparent 60%);
 }
 
-/* Hero banner — block navy besar di atas (seperti mara.gov.my) */
-.hero-banner {
+/* Lapisan 2: Pola geometrik halus (inspirasi songket MARA) */
+.bg-tvetmara::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.30;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%2319377B' stroke-width='0.8' stroke-linecap='round' opacity='0.5'><path d='M40 4 L48 12 L40 20 L32 12 Z'/><path d='M40 60 L48 68 L40 76 L32 68 Z'/><path d='M4 40 L12 32 L20 40 L12 48 Z'/><path d='M60 40 L68 32 L76 40 L68 48 Z'/><circle cx='40' cy='40' r='2.5'/><path d='M40 24 L40 32 M40 48 L40 56 M24 40 L32 40 M48 40 L56 40'/></g></svg>");
+  background-size: 80px 80px;
+}
+.dark .bg-tvetmara::after {
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><g fill='none' stroke='%2354B5E2' stroke-width='0.8' stroke-linecap='round' opacity='0.5'><path d='M40 4 L48 12 L40 20 L32 12 Z'/><path d='M40 60 L48 68 L40 76 L32 68 Z'/><path d='M4 40 L12 32 L20 40 L12 48 Z'/><path d='M60 40 L68 32 L76 40 L68 48 Z'/><circle cx='40' cy='40' r='2.5'/><path d='M40 24 L40 32 M40 48 L40 56 M24 40 L32 40 M48 40 L56 40'/></g></svg>");
+}
+
+/* Hero khusus halaman utama — bentuk organik besar */
+.hero-tvetmara {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(135deg, #19377B 0%, #262261 50%, #0C0A26 100%);
 }
-.dark .hero-banner {
-  background:
-    linear-gradient(135deg, #0C0A26 0%, #14113B 50%, #060519 100%);
-}
-
-/* Pola geometrik halus di hero (inspirasi songket) */
-.hero-banner::before {
+.hero-tvetmara::before {
   content: "";
   position: absolute;
-  inset: 0;
-  opacity: 0.10;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='none' stroke='%23FFFFFF' stroke-width='0.8' stroke-linecap='round'><path d='M30 4 L36 10 L30 16 L24 10 Z'/><path d='M30 44 L36 50 L30 56 L24 50 Z'/><path d='M4 30 L10 24 L16 30 L10 36 Z'/><path d='M44 30 L50 24 L56 30 L50 36 Z'/><circle cx='30' cy='30' r='2'/></g></svg>");
-  background-size: 60px 60px;
+  top: -30%;
+  right: -15%;
+  width: 70%;
+  height: 160%;
+  background: radial-gradient(circle, rgba(25, 55, 123, 0.14) 0%, transparent 65%);
+  z-index: 0;
+  pointer-events: none;
 }
-
-/* Aksen gradient merah di bahagian bawah hero */
-.hero-banner::after {
+.hero-tvetmara::after {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #9D0B0F 0%, #B45309 50%, #9D0B0F 100%);
+  bottom: -40%;
+  left: -10%;
+  width: 60%;
+  height: 140%;
+  background: radial-gradient(circle, rgba(157, 11, 15, 0.08) 0%, transparent 65%);
+  z-index: 0;
+  pointer-events: none;
+}
+.dark .hero-tvetmara::before {
+  background: radial-gradient(circle, rgba(84, 181, 226, 0.18) 0%, transparent 65%);
+}
+.dark .hero-tvetmara::after {
+  background: radial-gradient(circle, rgba(157, 11, 15, 0.18) 0%, transparent 65%);
 }
 
-/* Jalur hiasan kecil di bahagian atas header (warna MARA) */
+/* Pergerakan ambient — perlahan, tenang */
+@keyframes ambient-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -1%, 0) scale(1.04); }
+  100% { transform: translate3d(-1%, 2%, 0) scale(1.02); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-tvetmara::before { animation: none; }
+}
+
+/* Jalur hiasan kecil di bahagian atas header (warna MARA: navy + merah) */
 .brand-stripe {
   height: 3px;
   background: linear-gradient(
     90deg,
     #262261 0%,
     #19377B 25%,
-    #B45309 50%,
+    #54B5E2 50%,
     #9D0B0F 75%,
     #262261 100%
   );
@@ -324,54 +354,4 @@ h1, h2, h3, h4 {
 @keyframes stripe-flow {
   0%   { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
-}
-
-/* Block section seperti mara.gov.my */
-.gov-section {
-  padding: 3rem 0;
-}
-.gov-section-alt {
-  background-color: var(--bg-elev);
-  padding: 3rem 0;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* Quick link tile (Pautan Pantas style) */
-.quick-tile {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-.quick-tile:hover {
-  border-color: #19377B;
-  background-color: #EEF4FB;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(25, 55, 123, 0.15);
-}
-.dark .quick-tile {
-  background-color: #0C0A26;
-  border-color: #1C1950;
-}
-.dark .quick-tile:hover {
-  border-color: #6F95CC;
-  background-color: #14113B;
-}
-
-/* Badge style rasmi */
-.gov-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: 4px;
-  border: 1px solid;
 }

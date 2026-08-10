@@ -12,7 +12,7 @@ export function FeedbackList({ feedbacks, selectedFeedback, onSelectFeedback, fi
       <select
         value={filters[key]}
         onChange={(e) => onFiltersChange({ ...filters, [key]: e.target.value })}
-        className="gov-input w-full px-2.5 py-1.5 text-[12px] cursor-pointer"
+        className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer"
       >
         <option value="All">{allLabel}</option>
         {options.map(([val, lbl]) => (
@@ -23,7 +23,7 @@ export function FeedbackList({ feedbacks, selectedFeedback, onSelectFeedback, fi
   );
 
   return (
-    <div className="flex-1 gov-card p-5 flex flex-col space-y-4">
+    <div className="flex-1 card-warm p-5 flex flex-col space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--border-color)]">
         <div>
           <h2 className="font-display text-xl text-[var(--heading-color)]">
@@ -64,7 +64,7 @@ export function FeedbackList({ feedbacks, selectedFeedback, onSelectFeedback, fi
           <select
             value={filters.location}
             onChange={(e) => onFiltersChange({ ...filters, location: e.target.value })}
-            className="gov-input w-full px-2.5 py-1.5 text-[12px] cursor-pointer"
+            className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer"
           >
             <option value="All">{t('locations.filter_all')}</option>
             <option value="manual">{t('locations.fallback_manual')}</option>
