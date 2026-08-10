@@ -4,43 +4,67 @@ export function HomePage({ onSubmitFeedback, onTrackStatus }) {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-xl w-full text-center space-y-8 glass-card p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl animate-fade-in my-4 sm:my-8">
-      <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-500 text-white shadow-xl shadow-sky-500/10">
-        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-        </svg>
-      </div>
+    <section className="w-full max-w-3xl mx-auto py-10 sm:py-16 px-1">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center">
+        {/* Left: editorial intro */}
+        <div className="md:col-span-3 space-y-6">
+          <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-clay-500">
+            <span className="w-6 h-px bg-clay-400" />
+            {t('home.eyebrow', 'Sistem Maklum Balas Kafeteria')}
+          </span>
 
-      <div className="space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 to-indigo-900 dark:from-white dark:to-slate-300 bg-clip-text text-transparent font-display">
-          {t('form.welcome_title')}
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg max-w-md mx-auto font-light leading-relaxed">
-          {t('form.welcome_subtitle')}
-        </p>
-      </div>
+          <h1 className="font-display text-4xl sm:text-5xl leading-[1.08] tracking-tight text-[var(--heading-color)]">
+            {t('home.title_a', 'Suara anda,')}{' '}
+            <em className="not-italic text-clay-600 dark:text-clay-400 font-display italic">
+              {t('home.title_b', 'mendapat sambutan.')}
+            </em>
+          </h1>
 
-      <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <button
-          onClick={onSubmitFeedback}
-          className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-sky-500/15 hover:shadow-sky-500/35 active:scale-[0.98]"
-        >
-          {t('form.submit_feedback_btn')}
-        </button>
-        {onTrackStatus && (
-          <button
-            onClick={onTrackStatus}
-            className="w-full sm:w-auto px-8 py-3.5 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold rounded-xl transition-all border border-slate-200 dark:border-slate-800"
-          >
-            {t('track.btn_title', 'Semak Status Aduan')}
-          </button>
-        )}
-      </div>
+          <p className="text-[15px] sm:text-base text-ink-500 dark:text-ink-300 leading-relaxed max-w-md">
+            {t('home.lede', 'Aduan, cadangan, atau pujian — semuanya sampai ke meja pengurusan kafeteria. Tanpa borang kertas, tanpa emel yang hilang.')}
+          </p>
 
-      <div className="pt-8 border-t border-slate-200 dark:border-slate-800/40 flex justify-between text-xs text-slate-500">
-        <span>{t('form.easy_qr', 'Akses QR Mudah')}</span>
-        <span>TVET MARA Besut</span>
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              onClick={onSubmitFeedback}
+              className="btn-clay px-6 py-3 text-sm inline-flex items-center gap-2 cursor-pointer"
+            >
+              {t('form.submit_feedback_btn')}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
+            {onTrackStatus && (
+              <button
+                onClick={onTrackStatus}
+                className="px-5 py-3 text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-clay-600 dark:hover:text-clay-400 transition-colors cursor-pointer"
+              >
+                {t('track.btn_title', 'Semak Status Aduan')} →
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Right: meta card — feels like a posted notice, not a feature card */}
+        <aside className="md:col-span-2">
+          <div className="card-warm p-5 sm:p-6 relative">
+            <div className="absolute -top-2 left-6 px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest bg-clay-500 text-sand-50 rounded-sm rotate-[-1.5deg] shadow-sm">
+              {t('home.notice_tag', 'Notis')}
+            </div>
+            <p className="font-display text-[15px] leading-snug text-[var(--heading-color)] mt-2">
+              {t('home.notice_title', 'Imbas QR di kaunter untuk hantar aduan.')}
+            </p>
+            <p className="text-[13px] text-ink-500 dark:text-ink-400 mt-2 leading-relaxed">
+              {t('home.notice_body', 'Setiap meja ada kod QR tersendiri. Imbas, isi, hantar — kami akan semak dan maklum balas dalam masa yang berpatutan.')}
+            </p>
+            <hr className="rule-hand my-4" />
+            <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-ink-400">
+              <span>TVET MARA Besut</span>
+              <span className="text-clay-500">v1.0</span>
+            </div>
+          </div>
+        </aside>
       </div>
-    </div>
+    </section>
   );
 }

@@ -9,10 +9,7 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
   const handleLocNameChange = (e) => {
     const val = e.target.value;
     setNewLocName(val);
-    const generatedId = val.trim().toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-_]/g, '');
-    setNewLocId(generatedId);
+    setNewLocId(val.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''));
   };
 
   const handleSubmit = async (e) => {
@@ -23,37 +20,63 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
       setNewLocName('');
       setNewLocId('');
     } catch {
-      // error handled by parent
+      /* error handled by parent */
     }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl space-y-5 h-fit">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="card-warm p-5 space-y-4 h-fit">
         <div>
-          <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white">{t('locations.add_title')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('locations.subtitle')}</p>
+          <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('locations.add_title')}</h3>
+          <p className="text-[11px] text-ink-400 mt-0.5">{t('locations.subtitle')}</p>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-xs">{error}</div>
+          <div className="px-3 py-2 rounded-md border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-[12px]">
+            {error}
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label htmlFor="newLocName" className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('locations.name')}</label>
-            <input id="newLocName" type="text" required value={newLocName} onChange={handleLocNameChange} placeholder={t('locations.name_placeholder')} className="w-full px-4 py-3 rounded-xl glass-input text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500" />
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div>
+            <label htmlFor="newLocName" className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+              {t('locations.name')}
+            </label>
+            <input
+              id="newLocName"
+              type="text"
+              required
+              value={newLocName}
+              onChange={handleLocNameChange}
+              placeholder={t('locations.name_placeholder')}
+              className="input-warm w-full px-3 py-2 text-[13px]"
+            />
           </div>
-          <div className="space-y-1.5">
-            <label htmlFor="newLocId" className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('locations.id')}</label>
-            <input id="newLocId" type="text" required value={newLocId} onChange={(e) => setNewLocId(e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '-'))} placeholder={t('locations.id_placeholder')} className="w-full px-4 py-3 rounded-xl glass-input text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500" />
+          <div>
+            <label htmlFor="newLocId" className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+              {t('locations.id')}
+            </label>
+            <input
+              id="newLocId"
+              type="text"
+              required
+              value={newLocId}
+              onChange={(e) => setNewLocId(e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '-'))}
+              placeholder={t('locations.id_placeholder')}
+              className="input-warm w-full px-3 py-2 text-[13px] font-mono"
+            />
           </div>
-          <button type="submit" disabled={creating} className="w-full btn-primary py-3 flex justify-center items-center gap-2">
+          <button
+            type="submit"
+            disabled={creating}
+            className="btn-clay w-full py-2.5 text-[12px] inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+          >
             {creating ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.4 0 0 5.4 0 12h4z" />
                 </svg>
                 {t('locations.submitting_qr')}
               </>
@@ -62,50 +85,60 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
         </form>
       </div>
 
-      <div className="lg:col-span-2 glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl flex flex-col space-y-4">
+      <div className="lg:col-span-2 card-warm p-5 flex flex-col space-y-3">
         <div>
-          <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white">{t('locations.title')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('locations.subtitle')}</p>
+          <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('locations.title')}</h3>
+          <p className="text-[11px] text-ink-400 mt-0.5">{locations.length} {t('locations.subtitle')}</p>
         </div>
 
-        <div className="overflow-x-auto w-full">
-          <table className="w-full text-left text-xs font-light text-slate-700 dark:text-slate-300">
+        <div className="overflow-x-auto -mx-5 px-5">
+          <table className="w-full text-left text-[12px]">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800/80 uppercase tracking-wider text-[10px] text-slate-500">
-                <th className="py-3 px-4 font-semibold">{t('locations.col_name')}</th>
-                <th className="py-3 px-4 font-semibold">{t('locations.col_id')}</th>
-                <th className="py-3 px-4 font-semibold">{t('locations.col_qr')}</th>
-                <th className="py-3 px-4 font-semibold">{t('locations.col_status')}</th>
-                <th className="py-3 px-4 font-semibold text-right">{t('locations.col_actions')}</th>
+              <tr className="border-b border-[var(--border-color)] text-[10px] font-mono uppercase tracking-wider text-ink-400">
+                <th className="py-2 pr-3 font-medium">{t('locations.col_name')}</th>
+                <th className="py-2 px-3 font-medium">{t('locations.col_id')}</th>
+                <th className="py-2 px-3 font-medium">{t('locations.col_qr')}</th>
+                <th className="py-2 px-3 font-medium">{t('locations.col_status')}</th>
+                <th className="py-2 pl-3 font-medium text-right">{t('locations.col_actions')}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-[var(--text-color)]">
               {locations.length === 0 ? (
-                <tr><td colSpan="5" className="text-center py-10 text-slate-500">{t('admin.no_data')}</td></tr>
+                <tr><td colSpan="5" className="py-10 text-center text-ink-400">{t('admin.no_data')}</td></tr>
               ) : (
                 locations.map((loc) => (
-                  <tr key={loc.id} className="border-b border-slate-100 dark:border-slate-900/60 hover:bg-slate-500/5 transition-colors">
-                    <td className="py-4 px-4 font-semibold text-slate-900 dark:text-white">{loc.name}</td>
-                    <td className="py-4 px-4 font-mono text-[10px] text-slate-500">{loc.id}</td>
-                    <td className="py-2 px-4">
+                  <tr key={loc.id} className="border-b border-[var(--border-color)] last:border-0">
+                    <td className="py-3 pr-3 font-medium">{loc.name}</td>
+                    <td className="py-3 px-3 font-mono text-[10px] text-ink-400">{loc.id}</td>
+                    <td className="py-2 px-3">
                       {loc.qrCodeUrl && (
-                        <a href={loc.qrCodeUrl} target="_blank" rel="noopener noreferrer" className="block w-12 h-12 bg-white p-1 rounded border border-slate-200 dark:border-slate-800 hover:scale-105 transition-transform">
+                        <a href={loc.qrCodeUrl} target="_blank" rel="noopener noreferrer" className="block w-10 h-10 p-0.5 rounded-sm bg-white border border-[var(--border-color)] hover:border-clay-400 transition-colors">
                           <img src={loc.qrCodeUrl} alt={loc.name} className="w-full h-full object-contain" />
                         </a>
                       )}
                     </td>
-                    <td className="py-4 px-4">
+                    <td className="py-3 px-3">
                       {loc.active ? (
-                        <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">{t('locations.status_active')}</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-olive-300 dark:border-olive-800 bg-olive-100 dark:bg-olive-900/40 text-olive-700 dark:text-olive-300">
+                          {t('locations.status_active')}
+                        </span>
                       ) : (
-                        <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">{t('locations.status_inactive')}</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800/50 text-ink-500 dark:text-ink-400">
+                          {t('locations.status_inactive')}
+                        </span>
                       )}
                     </td>
-                    <td className="py-4 px-4 text-right space-x-2 whitespace-nowrap">
-                      <button onClick={() => onToggleStatus(loc)} className={`px-2.5 py-1 text-[10px] font-semibold rounded transition-colors ${loc.active ? 'bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300' : 'bg-indigo-600 hover:bg-indigo-500 text-white'}`}>
+                    <td className="py-3 pl-3 text-right whitespace-nowrap">
+                      <button
+                        onClick={() => onToggleStatus(loc)}
+                        className="px-2 py-1 text-[10px] font-medium rounded-sm border border-[var(--border-color)] text-ink-500 hover:text-clay-600 hover:border-clay-300 dark:hover:text-clay-400 transition-colors cursor-pointer"
+                      >
                         {loc.active ? t('locations.deactivate') : t('locations.activate')}
                       </button>
-                      <button onClick={() => onDownloadQR(loc)} className="px-2.5 py-1 text-[10px] font-semibold rounded bg-sky-500 hover:bg-sky-400 text-white transition-colors">
+                      <button
+                        onClick={() => onDownloadQR(loc)}
+                        className="ml-1 px-2 py-1 text-[10px] font-medium rounded-sm border border-clay-300 dark:border-clay-800 text-clay-600 dark:text-clay-400 hover:bg-clay-50 dark:hover:bg-clay-900/30 transition-colors cursor-pointer"
+                      >
                         {t('locations.download_qr')}
                       </button>
                     </td>

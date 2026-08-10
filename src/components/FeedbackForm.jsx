@@ -6,6 +6,8 @@ import { db, storage } from '../firebase';
 import { validateDescription } from '../utils';
 import { detectCategory, detectPriority } from '../lib/autoTag';
 
+const CATEGORIES = ['Umum', 'Makanan', 'Kebersihan', 'Kemudahan', 'Perkhidmatan'];
+
 export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError }) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -23,21 +25,18 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      setError('Sila pilih fail imej sahaja (PNG, JPG, JPEG).');
+      setError(t('form.err_image_only', 'Sila pilih fail imej sahaja (PNG, JPG, JPEG).'));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setError('Saiz imej mestilah kurang daripada 5MB.');
+      setError(t('form.err_image_size', 'Saiz imej mestilah kurang daripada 5MB.'));
       return;
     }
     setError(null);
@@ -63,13 +62,13 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
     setError(null);
     try {
       const feedbackColRef = collection(db, 'feedback');
-      const newFeedbackDocRef = doc(feedbackColRef);
-      const feedbackId = newFeedbackDocRef.id;
+      const newRef = doc(feedbackColRef);
+      const feedbackId = newRef.id;
 
       let uploadedPhotoUrl = null;
       if (photo) {
-        const fileExtension = photo.name.split('.').pop();
-        const storagePath = `feedback_photos/${feedbackId}.${fileExtension}`;
+        const ext = photo.name.split('.').pop();
+        const storagePath = `feedback_photos/${feedbackId}.${ext}`;
         const storageRef = ref(storage, storagePath);
         await uploadBytes(storageRef, photo, { contentType: photo.type });
         uploadedPhotoUrl = await getDownloadURL(storageRef);
@@ -78,7 +77,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
       const detectedCat = detectCategory(formData.description, formData.category);
       const detectedPrio = detectPriority(formData.description, 'medium');
 
-      const feedbackData = {
+      await setDoc(newRef, {
         id: feedbackId,
         category: detectedCat,
         priority: detectedPrio,
@@ -91,13 +90,11 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
         updatedAt: serverTimestamp(),
         adminNotes: null,
         isAnonymous: formData.isAnonymous,
-      };
-
-      await setDoc(newFeedbackDocRef, feedbackData);
+      });
       onSuccess(feedbackId);
     } catch (err) {
       console.error('Error submitting feedback:', err);
-      setError(`Gagal menghantar maklum balas: ${err.message || 'Sila cuba lagi.'}`);
+      setError(`${t('form.err_submit', 'Gagal menghantar maklum balas')}: ${err.message || ''}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setSubmitting(false);
@@ -105,148 +102,189 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
   };
 
   return (
-    <div className="max-w-lg w-full glass-card p-5 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 my-4 sm:my-6 overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/60 pb-4">
-        <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white">
+    <section className="w-full max-w-xl mx-auto py-6 sm:py-10 px-1">
+      <button
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 text-[12px] text-ink-400 hover:text-clay-600 dark:hover:text-clay-400 transition-colors mb-4 cursor-pointer"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 12H5M11 18l-6-6 6-6" />
+        </svg>
+        {t('form.back_btn')}
+      </button>
+
+      <div className="mb-6">
+        <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-clay-500">
+          {t('form.eyebrow', 'Borang Baharu')}
+        </span>
+        <h1 className="font-display text-3xl sm:text-4xl tracking-tight text-[var(--heading-color)] mt-1">
           {t('form.title')}
-        </h2>
-        <button onClick={onBack} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+        </h1>
+        <p className="text-[14px] text-ink-500 dark:text-ink-400 mt-2 max-w-md leading-relaxed">
+          {t('form.lede', 'Isi ikut kepintaran anda. Semua yang anda tulis akan dibaca oleh pengurusan kafeteria.')}
+        </p>
       </div>
 
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="space-y-1.5">
-          <label htmlFor="category" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-            {t('form.category')}
-          </label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 text-base cursor-pointer bg-white dark:bg-slate-900"
-          >
-            <option value="Umum" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Umum')}</option>
-            <option value="Makanan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Makanan')}</option>
-            <option value="Kebersihan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Kebersihan')}</option>
-            <option value="Kemudahan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Kemudahan')}</option>
-            <option value="Perkhidmatan" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">{t('categories.Perkhidmatan')}</option>
-          </select>
-        </div>
-
-        <div className="space-y-1.5">
-          <div className="flex justify-between items-center">
-            <label htmlFor="description" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              {t('form.description')} <span className="text-sky-500">*</span>
-            </label>
-            <span className={`text-xs ${formData.description.length > 500 ? 'text-red-500 dark:text-red-400' : 'text-slate-500'}`}>
-              {formData.description.length}/500
-            </span>
-          </div>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            required
-            rows="4"
-            maxLength="500"
-            autoCapitalize="sentences"
-            autoCorrect="on"
-            placeholder={t('form.description_placeholder')}
-            className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-sky-500 text-base transition-colors resize-y min-h-[120px]"
-          />
-        </div>
-
-        {currentLocation ? (
-          <div className="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-sm font-medium flex items-center gap-3">
-            <svg className="w-5 h-5 animate-pulse shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      <div className="card-warm p-5 sm:p-7">
+        {error && (
+          <div role="alert" className="mb-5 flex items-start gap-2.5 px-4 py-3 rounded-md border border-red-200 bg-red-50 text-red-700 text-[13px] dark:bg-red-500/10 dark:border-red-500/30 dark:text-red-400">
+            <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <path strokeLinecap="round" d="M12 8v4M12 16h.01" />
             </svg>
-            <div>
-              <span className="block text-[10px] uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">{t('locations.prefilled_info')}</span>
-              <span className="text-base font-bold text-slate-900 dark:text-white">{currentLocation.name}</span>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-1.5">
-            <label htmlFor="location" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              {t('form.location')}
-            </label>
-            <input
-              id="location"
-              name="location"
-              type="text"
-              value={formData.location}
-              onChange={handleInputChange}
-              placeholder={t('form.location_placeholder')}
-              className="w-full px-4 py-3 rounded-xl glass-input text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-sky-500 text-base"
-            />
+            <span>{error}</span>
           </div>
         )}
 
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block">
-            {t('form.photo')}
-          </label>
-          {!photoPreview ? (
-            <label htmlFor="photo" className="border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-sky-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-100/50 dark:bg-slate-950/20">
-              <svg className="w-8 h-8 text-slate-400 dark:text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span className="text-xs text-slate-500 dark:text-slate-400">{t('form.photo_select', 'Klik untuk pilih gambar')}</span>
+        {currentLocation && (
+          <div className="mb-5 flex items-start gap-3 px-4 py-3 rounded-md bg-clay-50 dark:bg-clay-900/30 border border-clay-200 dark:border-clay-800">
+            <svg className="w-4 h-4 mt-0.5 text-clay-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" />
+              <circle cx="12" cy="10" r="2.5" />
+            </svg>
+            <div>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
+                {t('locations.prefilled_info')}
+              </p>
+              <p className="text-[15px] font-semibold text-[var(--heading-color)] mt-0.5">
+                {currentLocation.name}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="category" className="block text-[11px] font-semibold uppercase tracking-wider text-ink-500 dark:text-ink-400 mb-1.5">
+              {t('form.category')}
             </label>
-          ) : (
-            <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/50 p-2 flex items-center gap-4">
-              <img src={photoPreview} alt="Preview" className="w-16 h-16 object-cover rounded-lg border border-slate-200 dark:border-slate-800" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">{photo.name}</p>
-                <p className="text-[10px] text-slate-500">{(photo.size / (1024 * 1024)).toFixed(2)} MB</p>
-              </div>
-              <button type="button" onClick={handleRemovePhoto} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800/80 rounded-lg text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors" title={t('form.photo_remove')}>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              className="input-warm w-full px-4 py-2.5 text-sm cursor-pointer"
+            >
+              {CATEGORIES.map(c => (
+                <option key={c} value={c}>{t(`categories.${c}`)}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <div className="flex items-baseline justify-between mb-1.5">
+              <label htmlFor="description" className="text-[11px] font-semibold uppercase tracking-wider text-ink-500 dark:text-ink-400">
+                {t('form.description')} <span className="text-clay-500 normal-case">*</span>
+              </label>
+              <span className={`text-[11px] font-mono ${formData.description.length > 500 ? 'text-red-500' : 'text-ink-400'}`}>
+                {formData.description.length}/500
+              </span>
+            </div>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              rows="5"
+              maxLength="500"
+              placeholder={t('form.description_placeholder')}
+              className="input-warm w-full px-4 py-3 text-[15px] leading-relaxed resize-y min-h-[140px]"
+            />
+          </div>
+
+          {!currentLocation && (
+            <div>
+              <label htmlFor="location" className="block text-[11px] font-semibold uppercase tracking-wider text-ink-500 dark:text-ink-400 mb-1.5">
+                {t('form.location')}
+              </label>
+              <input
+                id="location"
+                name="location"
+                type="text"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder={t('form.location_placeholder')}
+                className="input-warm w-full px-4 py-2.5 text-sm"
+              />
             </div>
           )}
-          <input ref={fileInputRef} id="photo" name="photo" type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-        </div>
 
-        <div className="flex items-center gap-3 pt-2">
-          <input id="isAnonymous" name="isAnonymous" type="checkbox" checked={formData.isAnonymous} onChange={handleInputChange} className="w-4 h-4 rounded border-slate-300 dark:border-slate-800 text-sky-500 focus:ring-sky-500 focus:ring-offset-white dark:focus:ring-offset-slate-950 bg-white dark:bg-slate-950" />
-          <label htmlFor="isAnonymous" className="text-sm text-slate-600 dark:text-slate-400 cursor-pointer select-none">
-            {t('form.anonymous')}
-          </label>
-        </div>
-
-        <div className="flex gap-4 pt-4 border-t border-slate-200 dark:border-slate-900">
-          <button type="button" onClick={onBack} className="flex-1 py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl transition-colors border border-slate-300 dark:border-slate-800 font-medium">
-            {t('form.back_btn')}
-          </button>
-          <button type="submit" disabled={submitting} className="flex-1 btn-primary flex justify-center items-center gap-2">
-            {submitting ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          <div>
+            <label className="block text-[11px] font-semibold uppercase tracking-wider text-ink-500 dark:text-ink-400 mb-1.5">
+              {t('form.photo')}
+            </label>
+            {!photoPreview ? (
+              <label
+                htmlFor="photo"
+                className="flex flex-col items-center justify-center gap-2 py-7 cursor-pointer rounded-md border border-dashed border-sand-400 dark:border-ink-700 hover:border-clay-400 hover:bg-clay-50/40 dark:hover:bg-clay-900/20 transition-colors"
+              >
+                <svg className="w-7 h-7 text-ink-300 dark:text-ink-600" fill="none" stroke="currentColor" strokeWidth="1.6" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.6-4.6a2 2 0 0 1 2.8 0L16 16m-2-2 1.6-1.6a2 2 0 0 1 2.8 0L20 14M14 8h.01M6 20h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z" />
                 </svg>
-                {t('form.submitting')}
-              </>
-            ) : t('form.submit_btn')}
-          </button>
-        </div>
-      </form>
-    </div>
+                <span className="text-[12px] text-ink-400">{t('form.photo_select', 'Klik untuk pilih gambar')}</span>
+              </label>
+            ) : (
+              <div className="flex items-center gap-3 p-3 rounded-md border border-[var(--border-color)] bg-sand-50 dark:bg-ink-900/40">
+                <img src={photoPreview} alt="Pratonton" className="w-14 h-14 object-cover rounded-md border border-[var(--border-color)]" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[12px] font-medium text-[var(--text-color)] truncate">{photo.name}</p>
+                  <p className="text-[10px] font-mono text-ink-400">{(photo.size / 1024).toFixed(1)} KB</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  className="p-1.5 rounded-md text-ink-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
+                  aria-label={t('form.photo_remove')}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M6 18L18 6" />
+                  </svg>
+                </button>
+              </div>
+            )}
+            <input ref={fileInputRef} id="photo" name="photo" type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+          </div>
+
+          <label className="flex items-start gap-2.5 cursor-pointer select-none pt-1">
+            <input
+              type="checkbox"
+              name="isAnonymous"
+              checked={formData.isAnonymous}
+              onChange={handleInputChange}
+              className="mt-0.5 w-4 h-4 rounded border-sand-400 text-clay-500 focus:ring-clay-400 cursor-pointer"
+            />
+            <span className="text-[13px] text-ink-600 dark:text-ink-300 leading-snug">
+              {t('form.anonymous_hint', 'Hantar tanpa nama. Identiti anda tidak akan direkodkan.')}
+            </span>
+          </label>
+
+          <div className="pt-3 border-t border-[var(--border-color)]">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="btn-clay w-full py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+            >
+              {submitting ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.4 0 0 5.4 0 12h4z" />
+                  </svg>
+                  {t('form.submitting')}
+                </>
+              ) : (
+                <>
+                  {t('form.submit_btn')}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   );
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebase';
 import { useAuth } from './hooks/useAuth';
@@ -22,8 +23,14 @@ import { TrackStatusPage } from './components/TrackStatusPage';
 import { AdminManagement } from './components/AdminManagement';
 
 const DEFAULT_FILTERS = { status: 'All', category: 'All', priority: 'All', location: 'All' };
+const TABS = [
+  { id: 'list', label_key: 'admin.nav_list' },
+  { id: 'analytics', label_key: 'admin.nav_reports' },
+  { id: 'locations', label_key: 'locations.title' },
+];
 
 function App() {
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { adminUser, authLoading, authError, login, logout } = useAuth();
   const { locations, addLocation, toggleLocationStatus } = useLocations();
@@ -38,55 +45,37 @@ function App() {
   const [dashboardTab, setDashboardTab] = useState('list');
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
-  // Jika admin login, auto-redirect ke dashboard
   useEffect(() => {
-    if (adminUser && !authLoading) {
-      setPage('admin-dashboard');
-    }
+    if (adminUser && !authLoading) setPage('admin-dashboard');
   }, [adminUser, authLoading]);
 
-  // Handle loc parameter
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const locId = params.get('loc');
     if (locId) {
       setPage('form');
-      const locRef = doc(db, 'locations', locId);
-      getDoc(locRef).then((snap) => {
-        if (snap.exists() && snap.data().active) {
-          const locData = snap.data();
-          setCurrentLocation({ id: locId, ...locData });
-        } else {
-          setCurrentLocation({ id: locId, name: locId });
-        }
-      }).catch(() => {
-        setCurrentLocation({ id: locId, name: locId });
-      });
+      getDoc(doc(db, 'locations', locId))
+        .then((snap) => {
+          if (snap.exists() && snap.data().active) {
+            setCurrentLocation({ id: locId, ...snap.data() });
+          } else {
+            setCurrentLocation({ id: locId, name: locId });
+          }
+        })
+        .catch(() => setCurrentLocation({ id: locId, name: locId }));
     }
   }, []);
 
   const stats = useMemo(() => getStats(feedbacks), [feedbacks]);
 
   const filteredFeedbacks = useMemo(() => feedbacks.filter((fb) => {
-    const matchStatus = filters.status === 'All' || fb.status === filters.status;
-    const matchCategory = filters.category === 'All' || fb.category === filters.category;
-    const matchPriority = filters.priority === 'All' || fb.priority === filters.priority;
-    const matchLocation = filters.location === 'All' || fb.locationId === filters.location || (filters.location === 'manual' && !fb.locationId);
-    return matchStatus && matchCategory && matchPriority && matchLocation;
+    const m = (filter, val) => filter === 'All' || val === filter || (filter === 'manual' && !val);
+    return m(filters.status, fb.status) && m(filters.category, fb.category) && m(filters.priority, fb.priority) && m(filters.location, fb.locationId);
   }), [feedbacks, filters]);
 
   const handleNavigateHome = useCallback(() => {
-    if (!adminUser) {
-      setError(null);
-      setCurrentLocation(null);
-      setPage('home');
-    }
+    if (!adminUser) { setError(null); setCurrentLocation(null); setPage('home'); }
   }, [adminUser]);
-
-  const handleNavigateLogin = useCallback(() => {
-    setError(null);
-    setPage('admin-login');
-  }, []);
 
   const handleLogout = useCallback(async () => {
     setError(null);
@@ -101,28 +90,22 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const handleUpdateFeedback = useCallback(async (id, updates) => {
-    await updateFeedback(id, updates);
-  }, [updateFeedback]);
-
   const handleAddLocation = useCallback(async (name, slugId) => {
     setError(null);
     try {
       await addLocation(name, slugId);
     } catch (err) {
-      if (err.message === 'LOCATION_EXISTS') {
-        setError('ID/Slug Lokasi sudah wujud. Sila guna ID lain.');
-      } else {
-        setError('Ralat berlaku. Sila cuba lagi.');
-      }
+      setError(err.message === 'LOCATION_EXISTS'
+        ? t('locations.err_exists')
+        : t('common.error_general', 'Ralat berlaku. Sila cuba lagi.'));
       throw err;
     }
-  }, [addLocation]);
+  }, [addLocation, t]);
 
   const handleDownloadQR = useCallback(async (loc) => {
     try {
-      const response = await fetch(loc.qrCodeUrl);
-      const blob = await response.blob();
+      const res = await fetch(loc.qrCodeUrl);
+      const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -132,7 +115,7 @@ function App() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Error downloading QR code:', err);
+      console.error('Error downloading QR:', err);
     }
   }, []);
 
@@ -147,28 +130,24 @@ function App() {
       { key: 'isAnonymous', label: 'Anonymous' },
     ];
     const data = filteredFeedbacks.map((fb) => ({
-      id: fb.id,
-      description: fb.description,
-      category: fb.category,
-      priority: fb.priority,
-      status: fb.status,
-      location: fb.location || '-',
+      id: fb.id, description: fb.description, category: fb.category,
+      priority: fb.priority, status: fb.status, location: fb.location || '-',
       isAnonymous: fb.isAnonymous ? 'Ya' : 'Tidak',
     }));
-    exportToCsv(data, columns, 'aduan-kafe-export.csv');
+    exportToCsv(data, columns, 'aduan-kafe.csv');
   }, [filteredFeedbacks]);
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans">
+      <div className="min-h-screen flex flex-col bg-[var(--bg-color)]">
         <Header theme={theme} toggleTheme={toggleTheme} adminUser={null} onNavigateHome={() => {}} onNavigateLogin={() => {}} onLogout={() => {}} />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3 py-12">
-            <svg className="animate-spin h-8 w-8 text-sky-500" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+        <main className="flex-1 grid place-items-center">
+          <div className="flex flex-col items-center gap-3">
+            <svg className="animate-spin w-6 h-6 text-clay-500" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.4 0 0 5.4 0 12h4z" />
             </svg>
-            <p className="text-xs text-slate-500">Mengesahkan sesi...</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-ink-400">Mengesahkan sesi…</p>
           </div>
         </main>
         <Footer />
@@ -176,21 +155,22 @@ function App() {
     );
   }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans relative overflow-x-hidden transition-colors duration-300">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.08),transparent_60%)] pointer-events-none" />
+  const tabs = adminUser?.role === 'superadmin'
+    ? [...TABS, { id: 'admins', label_key: 'admin.mgmt_title' }]
+    : TABS;
 
+  return (
+    <div className="min-h-screen flex flex-col bg-[var(--bg-color)]">
       <Header
         theme={theme}
         toggleTheme={toggleTheme}
         adminUser={adminUser}
         onNavigateHome={handleNavigateHome}
-        onNavigateLogin={handleNavigateLogin}
+        onNavigateLogin={() => { setError(null); setPage('admin-login'); }}
         onLogout={handleLogout}
       />
 
-      <main className="flex-1 flex flex-col items-center justify-start sm:justify-center p-3 sm:p-6 relative z-0 overflow-y-auto w-full">
-        {/* Home */}
+      <main className="flex-1 w-full">
         {page === 'home' && !adminUser && (
           <HomePage
             onSubmitFeedback={() => { setError(null); setPage('form'); }}
@@ -198,7 +178,6 @@ function App() {
           />
         )}
 
-        {/* Feedback Form */}
         {page === 'form' && !adminUser && (
           <FeedbackForm
             currentLocation={currentLocation}
@@ -208,7 +187,6 @@ function App() {
           />
         )}
 
-        {/* Success */}
         {page === 'success' && !adminUser && (
           <SuccessPage
             referenceId={referenceId}
@@ -216,15 +194,10 @@ function App() {
           />
         )}
 
-        {/* Track Status */}
         {page === 'track' && !adminUser && (
-          <TrackStatusPage
-            referenceId=""
-            onBack={() => { setPage('home'); setError(null); }}
-          />
+          <TrackStatusPage referenceId="" onBack={() => { setPage('home'); setError(null); }} />
         )}
 
-        {/* Admin Login */}
         {page === 'admin-login' && !adminUser && (
           <AdminLoginPage
             onLogin={login}
@@ -233,37 +206,51 @@ function App() {
           />
         )}
 
-        {/* Admin Dashboard */}
         {page === 'admin-dashboard' && adminUser && (
-          <div className="w-full max-w-7xl flex flex-col space-y-6 my-6 min-h-[calc(100vh-160px)] animate-fade-in">
-            <StatsRow stats={stats} />
-
-            {/* Dashboard Tabs */}
-            <div className="flex border-b border-slate-200 dark:border-slate-900 gap-2 flex-wrap">
-              <button onClick={() => setDashboardTab('list')} className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 outline-none ${dashboardTab === 'list' ? 'border-sky-500 text-sky-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}>
-                Senarai Aduan ({filteredFeedbacks.length})
-              </button>
-              <button onClick={() => setDashboardTab('analytics')} className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 outline-none ${dashboardTab === 'analytics' ? 'border-sky-500 text-sky-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}>
-                Laporan & Analitik
-              </button>
-              <button onClick={() => setDashboardTab('locations')} className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 outline-none ${dashboardTab === 'locations' ? 'border-sky-500 text-sky-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}>
-                Urus Lokasi
-              </button>
-              {adminUser?.role === 'superadmin' && (
-                <button onClick={() => setDashboardTab('admins')} className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 outline-none ${dashboardTab === 'admins' ? 'border-sky-500 text-sky-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}>
-                  Urus Admin
-                </button>
-              )}
-              <div className="ml-auto flex items-center">
-                <button onClick={handleExportCsv} className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors">
-                  Eksport CSV
-                </button>
+          <div className="max-w-6xl mx-auto px-5 sm:px-8 py-6 space-y-5 animate-fade-in">
+            <div className="flex items-end justify-between flex-wrap gap-3">
+              <div>
+                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-clay-500">
+                  {t('admin.eyebrow', 'Pusat Kawalan')}
+                </span>
+                <h1 className="font-display text-3xl tracking-tight text-[var(--heading-color)] mt-0.5">
+                  {t('admin.dashboard_title')}
+                </h1>
               </div>
+              <button
+                onClick={handleExportCsv}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md border border-olive-300 dark:border-olive-800 text-olive-700 dark:text-olive-300 hover:bg-olive-50 dark:hover:bg-olive-900/30 transition-colors cursor-pointer"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+                </svg>
+                {t('admin.export_csv', 'Eksport CSV')}
+              </button>
             </div>
 
-            {/* Tab Content */}
+            <StatsRow stats={stats} />
+
+            <div className="flex items-center gap-1 border-b border-[var(--border-color)] overflow-x-auto">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setDashboardTab(tab.id)}
+                  className={`px-3 py-2.5 text-[13px] font-medium border-b-2 -mb-px whitespace-nowrap transition-colors cursor-pointer ${
+                    dashboardTab === tab.id
+                      ? 'border-clay-500 text-clay-600 dark:text-clay-400'
+                      : 'border-transparent text-ink-400 hover:text-ink-700 dark:hover:text-ink-200'
+                  }`}
+                >
+                  {t(tab.label_key)}
+                  {tab.id === 'list' && (
+                    <span className="ml-1.5 text-[10px] font-mono text-ink-400">({filteredFeedbacks.length})</span>
+                  )}
+                </button>
+              ))}
+            </div>
+
             {dashboardTab === 'list' && (
-              <div className="flex flex-col lg:flex-row gap-6">
+              <div className="flex flex-col lg:flex-row gap-4">
                 <FeedbackList
                   feedbacks={filteredFeedbacks}
                   selectedFeedback={selectedFeedback}
@@ -272,10 +259,7 @@ function App() {
                   onFiltersChange={setFilters}
                   locations={locations}
                 />
-                <FeedbackDetail
-                  feedback={selectedFeedback}
-                  onUpdate={handleUpdateFeedback}
-                />
+                <FeedbackDetail feedback={selectedFeedback} onUpdate={updateFeedback} />
               </div>
             )}
 

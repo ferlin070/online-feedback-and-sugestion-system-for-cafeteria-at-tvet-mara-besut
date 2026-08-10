@@ -1,29 +1,40 @@
 import { useTranslation } from 'react-i18next';
 
+const STATUS_STYLES = {
+  new: 'bg-clay-100 text-clay-700 border-clay-300 dark:bg-clay-900/40 dark:text-clay-300 dark:border-clay-800',
+  under_review: 'bg-olive-100 text-olive-700 border-olive-300 dark:bg-olive-900/40 dark:text-olive-300 dark:border-olive-800',
+  resolved: 'bg-ink-100 text-ink-600 border-ink-200 dark:bg-ink-800/50 dark:text-ink-200 dark:border-ink-700',
+};
+
+const PRIORITY_STYLES = {
+  high: 'bg-red-50 text-red-700 border-red-300 dark:bg-red-500/15 dark:text-red-400 dark:border-red-500/40',
+  medium: 'bg-clay-50 text-clay-700 border-clay-200 dark:bg-clay-900/30 dark:text-clay-300 dark:border-clay-800',
+  low: 'bg-ink-50 text-ink-500 border-ink-200 dark:bg-ink-800/40 dark:text-ink-400 dark:border-ink-700',
+};
+
 export function StatusBadge({ status }) {
   const { t } = useTranslation();
-  switch (status) {
-    case 'new':
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">{t('admin.status_new')}</span>;
-    case 'under_review':
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">{t('admin.status_under_review')}</span>;
-    case 'resolved':
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{t('admin.status_resolved')}</span>;
-    default:
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20">{status}</span>;
-  }
+  const label = status === 'new' ? t('admin.status_new')
+    : status === 'under_review' ? t('admin.status_under_review')
+    : status === 'resolved' ? t('admin.status_resolved')
+    : status;
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border ${STATUS_STYLES[status] || STATUS_STYLES.resolved}`}>
+      {label}
+    </span>
+  );
 }
 
 export function PriorityBadge({ priority }) {
   const { t } = useTranslation();
-  switch (priority) {
-    case 'high':
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-500/10 text-red-400 border border-red-500/30">{t('admin.priority_high')}</span>;
-    case 'medium':
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20">{t('admin.priority_medium')}</span>;
-    case 'low':
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20">{t('admin.priority_low')}</span>;
-    default:
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20">{priority}</span>;
-  }
+  const label = priority === 'high' ? t('admin.priority_high')
+    : priority === 'medium' ? t('admin.priority_medium')
+    : priority === 'low' ? t('admin.priority_low')
+    : priority;
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border ${PRIORITY_STYLES[priority] || PRIORITY_STYLES.low}`}>
+      {priority === 'high' && <span className="w-1.5 h-1.5 rounded-full bg-red-500" />}
+      {label}
+    </span>
+  );
 }

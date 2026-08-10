@@ -9,8 +9,8 @@ export function AdminManagement({ adminUser }) {
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [newAdminEmail, setNewAdminEmail] = useState('');
-  const [newAdminName, setNewAdminName] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [adding, setAdding] = useState(false);
 
   const isSuperAdmin = adminUser?.role === 'superadmin';
@@ -18,9 +18,9 @@ export function AdminManagement({ adminUser }) {
   const loadAdmins = async () => {
     setLoading(true);
     try {
-      const snapshot = await getDocs(collection(db, 'admins'));
+      const snap = await getDocs(collection(db, 'admins'));
       const list = [];
-      snapshot.forEach((d) => list.push({ uid: d.id, ...d.data() }));
+      snap.forEach((d) => list.push({ uid: d.id, ...d.data() }));
       setAdmins(list);
       setLoaded(true);
     } catch (err) {
@@ -31,26 +31,19 @@ export function AdminManagement({ adminUser }) {
     }
   };
 
-  const handleAddAdmin = async (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
-    if (!newAdminEmail.trim() || !newAdminName.trim()) {
+    if (!email.trim() || !name.trim()) {
       setError(t('admin.mgmt_error_empty', 'Sila isi emel dan nama.'));
       return;
     }
     setAdding(true);
     setError(null);
     try {
-      // Simpan ke koleksi admins dengan UID berdasarkan emel (untuk rujukan)
-      // Admin sebenar perlu daftar melalui Firebase Auth Console, ini hanya menyimpan metadata
-      const uid = newAdminEmail.trim().toLowerCase().replace(/[^a-z0-9@._-]/g, '');
-      const adminRef = doc(db, 'admins', uid);
-      await setDoc(adminRef, {
-        name: newAdminName.trim(),
-        email: newAdminEmail.trim(),
-        role: 'admin',
-      });
-      setNewAdminEmail('');
-      setNewAdminName('');
+      const uid = email.trim().toLowerCase().replace(/[^a-z0-9@._-]/g, '');
+      await setDoc(doc(db, 'admins', uid), { name: name.trim(), email: email.trim(), role: 'admin' });
+      setEmail('');
+      setName('');
       await loadAdmins();
     } catch (err) {
       console.error('Error adding admin:', err);
@@ -60,7 +53,7 @@ export function AdminManagement({ adminUser }) {
     }
   };
 
-  const handleRemoveAdmin = async (uid) => {
+  const handleRemove = async (uid) => {
     if (!confirm(t('admin.mgmt_confirm_remove', 'Anda pasti mahu membuang admin ini?'))) return;
     try {
       await deleteDoc(doc(db, 'admins', uid));
@@ -73,17 +66,17 @@ export function AdminManagement({ adminUser }) {
 
   if (!isSuperAdmin) {
     return (
-      <div className="glass-card p-8 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl text-center">
-        <p className="text-slate-500 text-sm">{t('admin.mgmt_no_access', 'Hanya Super Admin boleh mengurus akaun admin.')}</p>
+      <div className="card-warm p-8 text-center">
+        <p className="text-[13px] text-ink-400">{t('admin.mgmt_no_access', 'Hanya Super Admin boleh mengurus akaun admin.')}</p>
       </div>
     );
   }
 
   if (!loaded) {
     return (
-      <div className="glass-card p-8 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl text-center space-y-4">
-        <p className="text-slate-500 text-sm">{t('admin.mgmt_load_hint', 'Klik butang di bawah untuk memuatkan senarai admin.')}</p>
-        <button onClick={loadAdmins} disabled={loading} className="btn-primary px-6 py-2 text-sm">
+      <div className="card-warm p-8 text-center space-y-4">
+        <p className="text-[13px] text-ink-400">{t('admin.mgmt_load_hint', 'Klik butang di bawah untuk memuatkan senarai admin.')}</p>
+        <button onClick={loadAdmins} disabled={loading} className="btn-clay px-5 py-2 text-[12px] cursor-pointer">
           {loading ? t('common.loading') : t('admin.mgmt_btn_load', 'Muat Senarai Admin')}
         </button>
       </div>
@@ -91,69 +84,77 @@ export function AdminManagement({ adminUser }) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl space-y-5 h-fit">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="card-warm p-5 space-y-4 h-fit">
         <div>
-          <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white">{t('admin.mgmt_add_title', 'Tambah Admin')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('admin.mgmt_add_hint', 'Daftar admin baru. Mereka perlu daftar di Firebase Auth Console juga.')}</p>
+          <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('admin.mgmt_add_title', 'Tambah Admin')}</h3>
+          <p className="text-[11px] text-ink-400 mt-0.5">{t('admin.mgmt_add_hint', 'Daftar admin baru. Mereka perlu daftar di Firebase Auth Console juga.')}</p>
         </div>
 
-        {error && <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-xs">{error}</div>}
+        {error && (
+          <div className="px-3 py-2 rounded-md border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-[12px]">
+            {error}
+          </div>
+        )}
 
-        <form onSubmit={handleAddAdmin} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('admin.mgmt_name', 'Nama')}</label>
-            <input type="text" required value={newAdminName} onChange={(e) => setNewAdminName(e.target.value)} placeholder="Nama Admin" className="w-full px-4 py-3 rounded-xl glass-input text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:ring-sky-500" />
+        <form onSubmit={handleAdd} className="space-y-3">
+          <div>
+            <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">{t('admin.mgmt_name', 'Nama')}</label>
+            <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama Admin" className="input-warm w-full px-3 py-2 text-[13px]" />
           </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('admin.mgmt_email', 'Emel')}</label>
-            <input type="email" required value={newAdminEmail} onChange={(e) => setNewAdminEmail(e.target.value)} placeholder="admin@kafe-tvet.com" className="w-full px-4 py-3 rounded-xl glass-input text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:ring-sky-500" />
+          <div>
+            <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">{t('admin.mgmt_email', 'Emel')}</label>
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@kafe-tvet.com" className="input-warm w-full px-3 py-2 text-[13px]" />
           </div>
-          <button type="submit" disabled={adding} className="w-full btn-primary py-3 flex justify-center items-center">
+          <button type="submit" disabled={adding} className="btn-clay w-full py-2.5 text-[12px] cursor-pointer disabled:cursor-not-allowed">
             {adding ? t('common.saving') : t('admin.mgmt_btn_add', 'Tambah Admin')}
           </button>
         </form>
       </div>
 
-      <div className="lg:col-span-2 glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-2xl flex flex-col space-y-4">
+      <div className="lg:col-span-2 card-warm p-5 flex flex-col space-y-3">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white">{t('admin.mgmt_list_title', 'Senarai Admin')}</h3>
-            <p className="text-xs text-slate-500 mt-0.5">{admins.length} {t('admin.mgmt_count', 'admin berdaftar')}</p>
+            <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('admin.mgmt_list_title', 'Senarai Admin')}</h3>
+            <p className="text-[11px] text-ink-400 mt-0.5">{admins.length} {t('admin.mgmt_count', 'admin berdaftar')}</p>
           </div>
-          <button onClick={loadAdmins} disabled={loading} className="px-4 py-2 text-xs font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
-            {t('admin.mgmt_btn_refresh', 'Segar Semula')}
+          <button onClick={loadAdmins} disabled={loading} className="px-3 py-1.5 text-[11px] font-medium rounded-sm border border-[var(--border-color)] text-ink-500 hover:text-clay-600 hover:border-clay-300 dark:hover:text-clay-400 transition-colors cursor-pointer">
+            {t('admin.mgmt_btn_refresh', 'Segar')}
           </button>
         </div>
 
-        <div className="overflow-x-auto w-full">
-          <table className="w-full text-left text-xs font-light text-slate-700 dark:text-slate-300">
+        <div className="overflow-x-auto -mx-5 px-5">
+          <table className="w-full text-left text-[12px]">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800/80 uppercase tracking-wider text-[10px] text-slate-500">
-                <th className="py-3 px-4 font-semibold">{t('admin.mgmt_name', 'Nama')}</th>
-                <th className="py-3 px-4 font-semibold">{t('admin.mgmt_email', 'Emel')}</th>
-                <th className="py-3 px-4 font-semibold">{t('admin.mgmt_role', 'Peranan')}</th>
-                <th className="py-3 px-4 font-semibold text-right">{t('locations.col_actions')}</th>
+              <tr className="border-b border-[var(--border-color)] text-[10px] font-mono uppercase tracking-wider text-ink-400">
+                <th className="py-2 pr-3 font-medium">{t('admin.mgmt_name', 'Nama')}</th>
+                <th className="py-2 px-3 font-medium">{t('admin.mgmt_email', 'Emel')}</th>
+                <th className="py-2 px-3 font-medium">{t('admin.mgmt_role', 'Peranan')}</th>
+                <th className="py-2 pl-3 font-medium text-right">{t('locations.col_actions')}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-[var(--text-color)]">
               {admins.length === 0 ? (
-                <tr><td colSpan="4" className="text-center py-10 text-slate-500">{t('admin.no_data')}</td></tr>
+                <tr><td colSpan="4" className="py-10 text-center text-ink-400">{t('admin.no_data')}</td></tr>
               ) : (
                 admins.map((admin) => (
-                  <tr key={admin.uid} className="border-b border-slate-100 dark:border-slate-900/60 hover:bg-slate-500/5 transition-colors">
-                    <td className="py-4 px-4 font-semibold text-slate-900 dark:text-white">{admin.name}</td>
-                    <td className="py-4 px-4 text-slate-500">{admin.email}</td>
-                    <td className="py-4 px-4">
+                  <tr key={admin.uid} className="border-b border-[var(--border-color)] last:border-0">
+                    <td className="py-3 pr-3 font-medium">{admin.name}</td>
+                    <td className="py-3 px-3 text-ink-400">{admin.email}</td>
+                    <td className="py-3 px-3">
                       {admin.role === 'superadmin' ? (
-                        <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Super Admin</span>
+                        <span className="inline-flex px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-clay-300 dark:border-clay-800 bg-clay-100 dark:bg-clay-900/40 text-clay-700 dark:text-clay-300">
+                          Super Admin
+                        </span>
                       ) : (
-                        <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-slate-500/10 text-slate-400 border border-slate-500/20">Admin</span>
+                        <span className="inline-flex px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-sm border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800/50 text-ink-500 dark:text-ink-400">
+                          Admin
+                        </span>
                       )}
                     </td>
-                    <td className="py-4 px-4 text-right">
+                    <td className="py-3 pl-3 text-right">
                       {admin.uid !== adminUser?.uid && (
-                        <button onClick={() => handleRemoveAdmin(admin.uid)} className="px-2.5 py-1 text-[10px] font-semibold rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors">
+                        <button onClick={() => handleRemove(admin.uid)} className="px-2 py-1 text-[10px] font-medium rounded-sm border border-red-200 dark:border-red-500/40 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer">
                           {t('admin.mgmt_btn_remove', 'Buang')}
                         </button>
                       )}

@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { StatusBadge, PriorityBadge } from './Badges';
 import { formatTime } from '../lib/chartData';
 
+const CATEGORIES = ['Makanan', 'Kebersihan', 'Kemudahan', 'Perkhidmatan', 'Umum'];
+
 export function FeedbackDetail({ feedback, onUpdate }) {
   const { t } = useTranslation();
   const [editStatus, setEditStatus] = useState('new');
@@ -22,20 +24,16 @@ export function FeedbackDetail({ feedback, onUpdate }) {
 
   if (!feedback) {
     return (
-      <div className="w-full lg:w-[450px] glass-card rounded-2xl border border-slate-800/80 shadow-2xl p-6 flex flex-col">
-        <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-slate-500 space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-slate-400">{t('admin.details_no_selection_title', 'Tiada Aduan Dipilih')}</h4>
-            <p className="text-xs text-slate-600 mt-1 max-w-[200px] mx-auto">
-              {t('admin.details_no_selection_desc', 'Klik mana-mana aduan daripada senarai untuk melihat perincian penuh.')}
-            </p>
-          </div>
-        </div>
+      <div className="w-full lg:w-[420px] card-warm p-8 flex flex-col items-center justify-center text-center">
+        <svg className="w-10 h-10 text-ink-300 dark:text-ink-600 mb-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
+        </svg>
+        <p className="font-display text-[15px] text-[var(--heading-color)]">
+          {t('admin.details_no_selection_title', 'Pilih satu aduan')}
+        </p>
+        <p className="text-[12px] text-ink-400 mt-1 max-w-[220px]">
+          {t('admin.details_no_selection_desc', 'Klik mana-mana item di senarai untuk lihat perincian penuh.')}
+        </p>
       </div>
     );
   }
@@ -56,99 +54,130 @@ export function FeedbackDetail({ feedback, onUpdate }) {
   };
 
   return (
-    <div className="w-full lg:w-[450px] glass-card rounded-2xl border border-slate-800/80 shadow-2xl p-6 flex flex-col justify-between">
-      <div className="space-y-6 flex-1 flex flex-col justify-between">
-        <div className="space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-900 pb-3">
-            <h3 className="text-lg font-bold font-display text-white">{t('admin.details_title')}</h3>
-            <span className="text-[10px] font-mono text-slate-500 select-all">{t('admin.details_id')}: {feedback.id}</span>
+    <div className="w-full lg:w-[420px] card-warm p-5 flex flex-col">
+      <div className="flex items-center justify-between pb-3 border-b border-[var(--border-color)]">
+        <h3 className="font-display text-lg text-[var(--heading-color)]">
+          {t('admin.details_title')}
+        </h3>
+        <span className="text-[10px] font-mono text-ink-400 select-all break-all text-right max-w-[180px]">
+          {feedback.id}
+        </span>
+      </div>
+
+      <div className="flex gap-1.5 mt-3">
+        <StatusBadge status={feedback.status} />
+        <PriorityBadge priority={feedback.priority} />
+      </div>
+
+      {feedback.photoUrl && (
+        <a
+          href={feedback.photoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 block rounded-md overflow-hidden border border-[var(--border-color)] relative group"
+        >
+          <img src={feedback.photoUrl} alt="Lampiran" className="w-full h-36 object-cover" />
+          <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-sm bg-ink-900/70 text-sand-50 text-[10px] font-mono uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+            {t('admin.open_full_photo', 'Buka ↗')}
+          </span>
+        </a>
+      )}
+
+      <div className="grid grid-cols-2 gap-3 mt-4 text-[12px]">
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
+            {t('admin.details_sender', 'Pengirim')}
+          </p>
+          <p className="text-[var(--text-color)] mt-0.5">
+            {feedback.isAnonymous ? t('admin.details_anonymous_yes') : t('admin.details_anonymous_no')}
+          </p>
+        </div>
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
+            {t('admin.details_date', 'Dihantar')}
+          </p>
+          <p className="text-[var(--text-color)] mt-0.5">{formatTime(feedback.submittedAt)}</p>
+        </div>
+        {feedback.location && (
+          <div className="col-span-2 pt-2 border-t border-[var(--border-color)]">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
+              {t('locations.filter_label')}
+            </p>
+            <p className="text-clay-600 dark:text-clay-400 mt-0.5 flex items-center gap-1">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" />
+              </svg>
+              {feedback.location}
+              {feedback.locationId && (
+                <span className="text-[10px] font-mono text-ink-400 ml-1">({feedback.locationId})</span>
+              )}
+            </p>
           </div>
+        )}
+      </div>
 
-          <div className="flex gap-2">
-            <StatusBadge status={feedback.status} />
-            <PriorityBadge priority={feedback.priority} />
-          </div>
-
-          {feedback.photoUrl && (
-            <div className="rounded-xl overflow-hidden border border-slate-800 max-h-[160px] bg-slate-950/30">
-              <a href={feedback.photoUrl} target="_blank" rel="noopener noreferrer" className="relative group block">
-                <img src={feedback.photoUrl} alt="Lampiran aduan" className="w-full h-36 object-cover group-hover:opacity-90 transition-opacity" />
-                <div className="absolute inset-0 bg-slate-950/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs text-white font-medium transition-opacity">
-                  {t('admin.open_full_photo', 'Buka fail penuh ↗')}
-                </div>
-              </a>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-4 text-xs bg-slate-950/30 p-3 rounded-lg border border-slate-900">
-            <div>
-              <span className="text-[10px] uppercase font-semibold text-slate-500 block">{t('admin.details_sender', 'Pengirim')}</span>
-              <span className="text-slate-300 font-medium">{feedback.isAnonymous ? t('admin.details_anonymous_yes') : t('admin.details_anonymous_no')}</span>
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-semibold text-slate-500 block">{t('admin.details_date', 'Dihantar pada')}</span>
-              <span className="text-slate-300 font-medium">{formatTime(feedback.submittedAt)}</span>
-            </div>
-            {feedback.location && (
-              <div className="col-span-2 border-t border-slate-900/50 pt-2 mt-1">
-                <span className="text-[10px] uppercase font-semibold text-slate-500 block">{t('locations.filter_label')}</span>
-                <span className="text-sky-400 font-medium flex items-center gap-1">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  </svg>
-                  {feedback.location}
-                  {feedback.locationId && <span className="text-[10px] text-slate-500 font-mono">({feedback.locationId})</span>}
-                </span>
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">{t('form.description')}</span>
-            <div className="p-3 bg-slate-950/40 border border-slate-900 rounded-xl text-sm font-light leading-relaxed text-slate-200 whitespace-pre-wrap max-h-36 overflow-y-auto">
-              {feedback.description}
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4 pt-3 border-t border-slate-900">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{t('admin.details_status')}</label>
-                <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="w-full px-3 py-2 rounded-lg glass-input text-xs cursor-pointer">
-                  <option value="new">{t('admin.status_new')}</option>
-                  <option value="under_review">{t('admin.status_under_review')}</option>
-                  <option value="resolved">{t('admin.status_resolved')}</option>
-                </select>
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{t('admin.col_category')}</label>
-                <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="w-full px-3 py-2 rounded-lg glass-input text-xs cursor-pointer">
-                  <option value="Makanan">{t('categories.Makanan')}</option>
-                  <option value="Kebersihan">{t('categories.Kebersihan')}</option>
-                  <option value="Kemudahan">{t('categories.Kemudahan')}</option>
-                  <option value="Perkhidmatan">{t('categories.Perkhidmatan')}</option>
-                  <option value="Umum">{t('categories.Umum')}</option>
-                </select>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">{t('admin.details_priority')}</label>
-              <select value={editPriority} onChange={(e) => setEditPriority(e.target.value)} className="w-full px-3 py-2 rounded-lg glass-input text-xs cursor-pointer">
-                <option value="high">{t('admin.priority_high')}</option>
-                <option value="medium">{t('admin.priority_medium')}</option>
-                <option value="low">{t('admin.priority_low')}</option>
-              </select>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">{t('admin.details_notes')}</label>
-              <textarea value={editAdminNotes} onChange={(e) => setEditAdminNotes(e.target.value)} rows="3" placeholder={t('admin.details_notes_placeholder')} className="w-full px-3 py-2 rounded-lg glass-input text-xs placeholder-slate-600 focus:ring-sky-500" />
-            </div>
-            <button type="submit" disabled={updating} className="w-full btn-primary py-2.5 text-xs font-semibold flex justify-center items-center">
-              {updating ? t('common.saving') : t('admin.details_save')}
-            </button>
-          </form>
+      <div className="mt-4">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+          {t('form.description')}
+        </p>
+        <div className="p-3 rounded-md bg-sand-50 dark:bg-ink-900/50 border border-[var(--border-color)] text-[13px] leading-relaxed text-[var(--text-color)] whitespace-pre-wrap max-h-32 overflow-y-auto">
+          {feedback.description}
         </div>
       </div>
+
+      <form onSubmit={handleSubmit} className="space-y-3 mt-4 pt-3 border-t border-[var(--border-color)]">
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+              {t('admin.details_status')}
+            </label>
+            <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
+              <option value="new">{t('admin.status_new')}</option>
+              <option value="under_review">{t('admin.status_under_review')}</option>
+              <option value="resolved">{t('admin.status_resolved')}</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+              {t('admin.col_category')}
+            </label>
+            <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
+              {CATEGORIES.map(c => (
+                <option key={c} value={c}>{t(`categories.${c}`)}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div>
+          <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+            {t('admin.details_priority')}
+          </label>
+          <select value={editPriority} onChange={(e) => setEditPriority(e.target.value)} className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
+            <option value="high">{t('admin.priority_high')}</option>
+            <option value="medium">{t('admin.priority_medium')}</option>
+            <option value="low">{t('admin.priority_low')}</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
+            {t('admin.details_notes')}
+          </label>
+          <textarea
+            value={editAdminNotes}
+            onChange={(e) => setEditAdminNotes(e.target.value)}
+            rows="3"
+            placeholder={t('admin.details_notes_placeholder')}
+            className="input-warm w-full px-3 py-2 text-[12px] resize-y"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={updating}
+          className="btn-clay w-full py-2.5 text-[12px] inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+        >
+          {updating ? t('common.saving') : t('admin.details_save')}
+        </button>
+      </form>
     </div>
   );
 }

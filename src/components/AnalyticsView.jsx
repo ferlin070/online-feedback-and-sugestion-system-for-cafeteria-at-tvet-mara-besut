@@ -2,95 +2,110 @@ import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { getCategoryChartData, getStatusChartData, getTrendChartData, getLocationChartData } from '../lib/chartData';
 
-const PIE_COLORS = ['#38bdf8', '#fbbf24', '#34d399'];
+const PIE_COLORS = ['#B5651D', '#6B7B3C', '#7A7368'];
+const TOOLTIP_STYLE = {
+  backgroundColor: '#FFFCF6',
+  border: '1px solid #D4C4A8',
+  borderRadius: '6px',
+  color: '#1F1D1A',
+  fontSize: '12px',
+  boxShadow: '0 8px 16px -8px rgba(82,41,12,0.2)',
+};
+const AXIS_STROKE = '#A39D90';
+const GRID_STROKE = '#E5DBC5';
+
+function ChartCard({ title, subtitle, children, className = '' }) {
+  return (
+    <div className={`card-warm p-5 flex flex-col space-y-3 ${className}`}>
+      <div>
+        <h3 className="font-display text-[16px] text-[var(--heading-color)]">{title}</h3>
+        {subtitle && <p className="text-[11px] text-ink-400 mt-0.5">{subtitle}</p>}
+      </div>
+      <div className="h-56 w-full">{children}</div>
+    </div>
+  );
+}
 
 export function AnalyticsView({ feedbacks, locations }) {
   const { t } = useTranslation();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="glass-card p-6 rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col space-y-4">
-        <div>
-          <h3 className="text-lg font-bold font-display text-white">{t('reports.chart_category_title')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('reports.chart_category_subtitle', 'Analisis taburan bidang maklum balas yang diterima.')}</p>
-        </div>
-        <div className="h-64 w-full text-xs">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={getCategoryChartData(feedbacks, t)}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="name" stroke="#64748b" />
-              <YAxis allowDecimals={false} stroke="#64748b" />
-              <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.5rem', color: '#f1f5f9' }} />
-              <Bar dataKey="Jumlah" name={t('reports.summary_total', 'Jumlah')} fill="#38bdf8" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <ChartCard
+        title={t('reports.chart_category_title')}
+        subtitle={t('reports.chart_category_subtitle', 'Taburan bidang maklum balas.')}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getCategoryChartData(feedbacks, t)} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
+            <CartesianGrid strokeDasharray="2 4" stroke={GRID_STROKE} vertical={false} />
+            <XAxis dataKey="name" stroke={AXIS_STROKE} fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis allowDecimals={false} stroke={AXIS_STROKE} fontSize={11} tickLine={false} axisLine={false} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: '#F5E9DC', opacity: 0.4 }} />
+            <Bar dataKey="Jumlah" name={t('reports.summary_total', 'Jumlah')} fill="#B5651D" radius={[3, 3, 0, 0]} maxBarSize={42} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
 
-      <div className="glass-card p-6 rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col space-y-4">
-        <div>
-          <h3 className="text-lg font-bold font-display text-white">{t('reports.chart_status_title')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('reports.chart_status_subtitle', 'Status kemajuan pengurusan aduan semasa.')}</p>
-        </div>
-        <div className="h-64 w-full text-xs flex flex-col sm:flex-row items-center justify-center">
-          <div className="h-full w-full sm:w-2/3">
+      <ChartCard
+        title={t('reports.chart_status_title')}
+        subtitle={t('reports.chart_status_subtitle', 'Status kemajuan aduan.')}
+      >
+        <div className="h-full flex flex-col sm:flex-row items-center gap-3">
+          <div className="h-full w-full sm:w-3/5">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={getStatusChartData(feedbacks, t)} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                  {getStatusChartData(feedbacks, t).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                <Pie data={getStatusChartData(feedbacks, t)} cx="50%" cy="50%" innerRadius={48} outerRadius={70} paddingAngle={4} dataKey="value" stroke="#FFFCF6" strokeWidth={2}>
+                  {getStatusChartData(feedbacks, t).map((_, i) => (
+                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.5rem', color: '#f1f5f9' }} />
+                <Tooltip contentStyle={TOOLTIP_STYLE} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex flex-row sm:flex-col gap-4 text-xs font-medium text-slate-300">
-            {getStatusChartData(feedbacks, t).map((item, index) => (
-              <div key={item.name} className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: PIE_COLORS[index % PIE_COLORS.length] }}></span>
-                <span>{item.name}: {item.value}</span>
+          <div className="flex flex-row sm:flex-col gap-2 text-[11px]">
+            {getStatusChartData(feedbacks, t).map((item, i) => (
+              <div key={item.name} className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                <span className="text-[var(--text-color)]">{item.name}</span>
+                <span className="font-mono text-ink-400">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </ChartCard>
 
-      <div className="glass-card p-6 rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col space-y-4 lg:col-span-2">
-        <div>
-          <h3 className="text-lg font-bold font-display text-white">{t('reports.chart_trend_title')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('reports.chart_trend_subtitle', 'Melihat kestabilan aduan yang diterima sepanjang masa.')}</p>
-        </div>
-        <div className="h-64 w-full text-xs">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={getTrendChartData(feedbacks, t)}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="name" stroke="#64748b" />
-              <YAxis allowDecimals={false} stroke="#64748b" />
-              <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.5rem', color: '#f1f5f9' }} />
-              <Line type="monotone" dataKey="Jumlah" name={t('reports.summary_total', 'Jumlah')} stroke="#0ea5e9" strokeWidth={3} dot={{ fill: '#38bdf8', stroke: '#0ea5e9', strokeWidth: 2, r: 5 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      <ChartCard
+        title={t('reports.chart_trend_title')}
+        subtitle={t('reports.chart_trend_subtitle', 'Stabiliti aduan sepanjang masa.')}
+        className="lg:col-span-2"
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={getTrendChartData(feedbacks, t)} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
+            <CartesianGrid strokeDasharray="2 4" stroke={GRID_STROKE} vertical={false} />
+            <XAxis dataKey="name" stroke={AXIS_STROKE} fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis allowDecimals={false} stroke={AXIS_STROKE} fontSize={11} tickLine={false} axisLine={false} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} />
+            <Line type="monotone" dataKey="Jumlah" name={t('reports.summary_total', 'Jumlah')} stroke="#B5651D" strokeWidth={2.2} dot={{ r: 3, fill: '#B5651D', strokeWidth: 0 }} activeDot={{ r: 5 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartCard>
 
-      <div className="glass-card p-6 rounded-2xl border border-slate-800/80 shadow-2xl flex flex-col space-y-4 lg:col-span-2">
-        <div>
-          <h3 className="text-lg font-bold font-display text-white">{t('locations.chart_title')}</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{t('locations.chart_subtitle')}</p>
-        </div>
-        <div className="h-64 w-full text-xs">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={getLocationChartData(feedbacks, locations, t)}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="name" stroke="#64748b" />
-              <YAxis allowDecimals={false} stroke="#64748b" />
-              <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.5rem', color: '#f1f5f9' }} />
-              <Bar dataKey="Jumlah" name={t('reports.summary_total', 'Jumlah')} fill="#818cf8" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      <ChartCard
+        title={t('locations.chart_title')}
+        subtitle={t('locations.chart_subtitle')}
+        className="lg:col-span-2"
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getLocationChartData(feedbacks, locations, t)} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
+            <CartesianGrid strokeDasharray="2 4" stroke={GRID_STROKE} vertical={false} />
+            <XAxis dataKey="name" stroke={AXIS_STROKE} fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis allowDecimals={false} stroke={AXIS_STROKE} fontSize={11} tickLine={false} axisLine={false} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: '#F5E9DC', opacity: 0.4 }} />
+            <Bar dataKey="Jumlah" name={t('reports.summary_total', 'Jumlah')} fill="#6B7B3C" radius={[3, 3, 0, 0]} maxBarSize={42} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
     </div>
   );
 }
