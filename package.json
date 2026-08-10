@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "test": "node src/utils.test.js",
+    "test": "node src/utils.test.js && node src/autoTag.test.js",
     "preview": "vite preview"
   },
   "dependencies": {

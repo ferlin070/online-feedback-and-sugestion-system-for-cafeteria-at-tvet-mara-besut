@@ -7,7 +7,9 @@
     "loading": "Loading...",
     "saving": "Saving...",
     "error_general": "An error occurred. Please try again.",
-    "save_success": "Changes successfully saved!"
+    "save_success": "Changes successfully saved!",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode"
   },
   "form": {
     "title": "Feedback Form",
@@ -38,6 +40,16 @@
     "email": "Email Address",
     "password": "Password",
     "submit": "Log In"
+  },
+  "track": {
+    "title": "Check Feedback Status",
+    "btn_title": "Check Status",
+    "subtitle": "Enter the reference ID you received after submitting feedback to view the current status.",
+    "placeholder": "Paste your reference ID here...",
+    "btn_search": "Search",
+    "error_empty": "Please enter your reference ID.",
+    "error_not_found": "Feedback not found. Please check your reference ID.",
+    "error_general": "Error retrieving feedback. Please try again."
   },
   "admin": {
     "dashboard_title": "Admin Dashboard",
@@ -74,7 +86,32 @@
     "details_saving": "Saving...",
     "details_no_selection": "Please select any feedback from the list to view details.",
     "alert_critical_title": "New Critical Feedback!",
-    "alert_critical_desc": "unresolved critical feedback!"
+    "alert_critical_desc": "unresolved critical feedback!",
+    "dashboard_subtitle": "Displaying user feedback in real time.",
+    "details_sender": "Sender",
+    "details_date": "Submitted on",
+    "details_no_selection_title": "No Feedback Selected",
+    "details_no_selection_desc": "Click any feedback from the list to view full details.",
+    "open_full_photo": "Open full file ↗",
+    "mgmt_title": "Manage Admins",
+    "mgmt_add_title": "Add Admin",
+    "mgmt_add_hint": "Register a new admin. They also need to register in the Firebase Auth Console.",
+    "mgmt_name": "Name",
+    "mgmt_email": "Email",
+    "mgmt_role": "Role",
+    "mgmt_btn_add": "Add Admin",
+    "mgmt_btn_remove": "Remove",
+    "mgmt_list_title": "Admin List",
+    "mgmt_count": "registered admins",
+    "mgmt_btn_refresh": "Refresh",
+    "mgmt_no_access": "Only Super Admin can manage admin accounts.",
+    "mgmt_load_hint": "Click the button below to load the admin list.",
+    "mgmt_btn_load": "Load Admin List",
+    "mgmt_error_load": "Error loading admin list.",
+    "mgmt_error_empty": "Please fill in email and name.",
+    "mgmt_error_add": "Error adding admin.",
+    "mgmt_error_remove": "Error removing admin.",
+    "mgmt_confirm_remove": "Are you sure you want to remove this admin?"
   },
   "reports": {
     "summary_total": "Total Feedback",
@@ -83,7 +120,10 @@
     "summary_resolved": "Resolved",
     "chart_category_title": "Number of Feedback by Category",
     "chart_status_title": "Feedback Status Distribution",
-    "chart_trend_title": "Monthly Feedback Trend"
+    "chart_trend_title": "Monthly Feedback Trend",
+    "chart_category_subtitle": "Analysis of feedback field distribution received.",
+    "chart_status_subtitle": "Current progress status of feedback management.",
+    "chart_trend_subtitle": "Tracking the stability of feedback received over time."
   },
   "categories": {
     "Makanan": "Food",

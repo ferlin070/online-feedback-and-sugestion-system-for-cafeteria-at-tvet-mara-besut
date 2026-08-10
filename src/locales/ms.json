@@ -7,7 +7,9 @@
     "loading": "Memuatkan...",
     "saving": "Menyimpan...",
     "error_general": "Ralat berlaku. Sila cuba lagi.",
-    "save_success": "Perubahan berjaya disimpan!"
+    "save_success": "Perubahan berjaya disimpan!",
+    "light_mode": "Mod Terang",
+    "dark_mode": "Mod Gelap"
   },
   "form": {
     "title": "Borang Maklum Balas",
@@ -38,6 +40,16 @@
     "email": "Alamat Emel",
     "password": "Kata Laluan",
     "submit": "Log Masuk"
+  },
+  "track": {
+    "title": "Semak Status Aduan",
+    "btn_title": "Semak Status Aduan",
+    "subtitle": "Masukkan ID rujukan yang anda terima selepas menghantar aduan untuk melihat status semasa.",
+    "placeholder": "Tampal ID rujukan di sini...",
+    "btn_search": "Cari",
+    "error_empty": "Sila masukkan ID rujukan anda.",
+    "error_not_found": "Aduan tidak ditemui. Sila semak ID rujukan anda.",
+    "error_general": "Ralat mendapatkan maklum balas. Sila cuba lagi."
   },
   "admin": {
     "dashboard_title": "Dashboard Pentadbir",
@@ -74,7 +86,32 @@
     "details_saving": "Menyimpan...",
     "details_no_selection": "Sila pilih mana-mana aduan daripada senarai untuk melihat perincian.",
     "alert_critical_title": "Aduan Kritikal Baru!",
-    "alert_critical_desc": "aduan kritikal tidak diselesaikan!"
+    "alert_critical_desc": "aduan kritikal tidak diselesaikan!",
+    "dashboard_subtitle": "Memaparkan aduan dari pengguna secara masa nyata.",
+    "details_sender": "Pengirim",
+    "details_date": "Dihantar pada",
+    "details_no_selection_title": "Tiada Aduan Dipilih",
+    "details_no_selection_desc": "Klik mana-mana aduan daripada senarai untuk melihat perincian penuh.",
+    "open_full_photo": "Buka fail penuh ↗",
+    "mgmt_title": "Urus Admin",
+    "mgmt_add_title": "Tambah Admin",
+    "mgmt_add_hint": "Daftar admin baru. Mereka perlu daftar di Firebase Auth Console juga.",
+    "mgmt_name": "Nama",
+    "mgmt_email": "Emel",
+    "mgmt_role": "Peranan",
+    "mgmt_btn_add": "Tambah Admin",
+    "mgmt_btn_remove": "Buang",
+    "mgmt_list_title": "Senarai Admin",
+    "mgmt_count": "admin berdaftar",
+    "mgmt_btn_refresh": "Segar Semula",
+    "mgmt_no_access": "Hanya Super Admin boleh mengurus akaun admin.",
+    "mgmt_load_hint": "Klik butang di bawah untuk memuatkan senarai admin.",
+    "mgmt_btn_load": "Muat Senarai Admin",
+    "mgmt_error_load": "Ralat memuatkan senarai admin.",
+    "mgmt_error_empty": "Sila isi emel dan nama.",
+    "mgmt_error_add": "Ralat menambah admin.",
+    "mgmt_error_remove": "Ralat membuang admin.",
+    "mgmt_confirm_remove": "Anda pasti mahu membuang admin ini?"
   },
   "reports": {
     "summary_total": "Jumlah Aduan",
@@ -83,7 +120,10 @@
     "summary_resolved": "Selesai",
     "chart_category_title": "Bilangan Aduan Mengikut Kategori",
     "chart_status_title": "Taburan Status Aduan",
-    "chart_trend_title": "Trend Bulanan Aduan"
+    "chart_trend_title": "Trend Bulanan Aduan",
+    "chart_category_subtitle": "Analisis taburan bidang maklum balas yang diterima.",
+    "chart_status_subtitle": "Status kemajuan pengurusan aduan semasa.",
+    "chart_trend_subtitle": "Melihat kestabilan aduan yang diterima sepanjang masa."
   },
   "categories": {
     "Makanan": "Makanan",
