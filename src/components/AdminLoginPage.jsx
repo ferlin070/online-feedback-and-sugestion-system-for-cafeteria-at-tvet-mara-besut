@@ -75,7 +75,7 @@ export function AdminLoginPage({ onLogin, onBack, authError }) {
             required
             autoComplete="email"
             placeholder="admin@kafe-tvet.com"
-            className="input-warm w-full px-4 py-2.5 text-sm"
+            className="gov-input w-full px-4 py-2.5 text-sm"
           />
         </div>
         <div>
@@ -90,14 +90,14 @@ export function AdminLoginPage({ onLogin, onBack, authError }) {
             required
             autoComplete="current-password"
             placeholder="••••••••"
-            className="input-warm w-full px-4 py-2.5 text-sm"
+            className="gov-input w-full px-4 py-2.5 text-sm"
           />
         </div>
 
         <button
           type="submit"
           disabled={submitting}
-          className="btn-clay w-full py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed mt-2"
+          className="btn-mara w-full py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed mt-2"
         >
           {submitting ? (
             <>

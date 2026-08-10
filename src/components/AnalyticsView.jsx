@@ -16,7 +16,7 @@ const GRID_STROKE = '#E5DBC5';
 
 function ChartCard({ title, subtitle, children, className = '' }) {
   return (
-    <div className={`card-warm p-5 flex flex-col space-y-3 ${className}`}>
+    <div className={`gov-card p-5 flex flex-col space-y-3 ${className}`}>
       <div>
         <h3 className="font-display text-[16px] text-[var(--heading-color)]">{title}</h3>
         {subtitle && <p className="text-[11px] text-ink-400 mt-0.5">{subtitle}</p>}

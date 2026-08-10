@@ -125,7 +125,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
         </p>
       </div>
 
-      <div className="card-warm p-5 sm:p-7">
+      <div className="gov-card p-5 sm:p-7">
         {error && (
           <div role="alert" className="mb-5 flex items-start gap-2.5 px-4 py-3 rounded-md border border-red-200 bg-red-50 text-red-700 text-[13px] dark:bg-red-500/10 dark:border-red-500/30 dark:text-red-400">
             <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -163,7 +163,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              className="input-warm w-full px-4 py-2.5 text-sm cursor-pointer"
+              className="gov-input w-full px-4 py-2.5 text-sm cursor-pointer"
             >
               {CATEGORIES.map(c => (
                 <option key={c} value={c}>{t(`categories.${c}`)}</option>
@@ -189,7 +189,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
               rows="5"
               maxLength="500"
               placeholder={t('form.description_placeholder')}
-              className="input-warm w-full px-4 py-3 text-[15px] leading-relaxed resize-y min-h-[140px]"
+              className="gov-input w-full px-4 py-3 text-[15px] leading-relaxed resize-y min-h-[140px]"
             />
           </div>
 
@@ -205,7 +205,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
                 value={formData.location}
                 onChange={handleInputChange}
                 placeholder={t('form.location_placeholder')}
-                className="input-warm w-full px-4 py-2.5 text-sm"
+                className="gov-input w-full px-4 py-2.5 text-sm"
               />
             </div>
           )}
@@ -263,7 +263,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
             <button
               type="submit"
               disabled={submitting}
-              className="btn-clay w-full py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+              className="btn-mara w-full py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <>

@@ -66,7 +66,7 @@ export function AdminManagement({ adminUser }) {
 
   if (!isSuperAdmin) {
     return (
-      <div className="card-warm p-8 text-center">
+      <div className="gov-card p-8 text-center">
         <p className="text-[13px] text-ink-400">{t('admin.mgmt_no_access', 'Hanya Super Admin boleh mengurus akaun admin.')}</p>
       </div>
     );
@@ -74,9 +74,9 @@ export function AdminManagement({ adminUser }) {
 
   if (!loaded) {
     return (
-      <div className="card-warm p-8 text-center space-y-4">
+      <div className="gov-card p-8 text-center space-y-4">
         <p className="text-[13px] text-ink-400">{t('admin.mgmt_load_hint', 'Klik butang di bawah untuk memuatkan senarai admin.')}</p>
-        <button onClick={loadAdmins} disabled={loading} className="btn-clay px-5 py-2 text-[12px] cursor-pointer">
+        <button onClick={loadAdmins} disabled={loading} className="btn-mara px-5 py-2 text-[12px] cursor-pointer">
           {loading ? t('common.loading') : t('admin.mgmt_btn_load', 'Muat Senarai Admin')}
         </button>
       </div>
@@ -85,7 +85,7 @@ export function AdminManagement({ adminUser }) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="card-warm p-5 space-y-4 h-fit">
+      <div className="gov-card p-5 space-y-4 h-fit">
         <div>
           <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('admin.mgmt_add_title', 'Tambah Admin')}</h3>
           <p className="text-[11px] text-ink-400 mt-0.5">{t('admin.mgmt_add_hint', 'Daftar admin baru. Mereka perlu daftar di Firebase Auth Console juga.')}</p>
@@ -100,19 +100,19 @@ export function AdminManagement({ adminUser }) {
         <form onSubmit={handleAdd} className="space-y-3">
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">{t('admin.mgmt_name', 'Nama')}</label>
-            <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama Admin" className="input-warm w-full px-3 py-2 text-[13px]" />
+            <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama Admin" className="gov-input w-full px-3 py-2 text-[13px]" />
           </div>
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">{t('admin.mgmt_email', 'Emel')}</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@kafe-tvet.com" className="input-warm w-full px-3 py-2 text-[13px]" />
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@kafe-tvet.com" className="gov-input w-full px-3 py-2 text-[13px]" />
           </div>
-          <button type="submit" disabled={adding} className="btn-clay w-full py-2.5 text-[12px] cursor-pointer disabled:cursor-not-allowed">
+          <button type="submit" disabled={adding} className="btn-mara w-full py-2.5 text-[12px] cursor-pointer disabled:cursor-not-allowed">
             {adding ? t('common.saving') : t('admin.mgmt_btn_add', 'Tambah Admin')}
           </button>
         </form>
       </div>
 
-      <div className="lg:col-span-2 card-warm p-5 flex flex-col space-y-3">
+      <div className="lg:col-span-2 gov-card p-5 flex flex-col space-y-3">
         <div className="flex justify-between items-center">
           <div>
             <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('admin.mgmt_list_title', 'Senarai Admin')}</h3>

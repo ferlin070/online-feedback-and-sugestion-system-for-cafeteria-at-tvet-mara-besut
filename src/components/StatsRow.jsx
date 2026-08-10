@@ -12,7 +12,7 @@ export function StatsRow({ stats }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {items.map((it) => (
-        <div key={it.label} className="card-warm p-4 flex items-center justify-between">
+        <div key={it.label} className="gov-card p-4 flex items-center justify-between">
           <div>
             <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">{it.label}</p>
             <p className={`font-display text-3xl mt-1 ${it.accent}`}>{it.value}</p>

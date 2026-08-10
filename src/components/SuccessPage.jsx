@@ -21,14 +21,14 @@ export function SuccessPage({ referenceId, onSubmitAnother }) {
         {t('form.success_desc')}
       </p>
 
-      <div className="card-warm mt-6 p-5 text-left">
+      <div className="gov-card mt-6 p-5 text-left">
         <p className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
           {t('form.ref_id')}
         </p>
         <p className="font-mono text-[15px] font-medium text-mara-blue-600 dark:text-mara-blue-400 mt-1 break-all select-all">
           {referenceId}
         </p>
-        <hr className="rule-hand my-3" />
+        <hr className="rule-gold my-3" />
         <p className="text-[11px] text-ink-400 leading-relaxed">
           {t('form.ref_id_sub')} {t('form.ref_id_sub2', 'Anda boleh gunakan ID ini untuk semak status aduan kemudian.')}
         </p>
@@ -36,7 +36,7 @@ export function SuccessPage({ referenceId, onSubmitAnother }) {
 
       <button
         onClick={onSubmitAnother}
-        className="btn-clay w-full mt-5 py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer"
+        className="btn-mara w-full mt-5 py-3 text-sm inline-flex justify-center items-center gap-2 cursor-pointer"
       >
         {t('form.new_submission_btn')}
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">

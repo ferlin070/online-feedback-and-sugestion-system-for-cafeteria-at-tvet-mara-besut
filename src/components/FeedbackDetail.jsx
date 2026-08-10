@@ -24,7 +24,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
 
   if (!feedback) {
     return (
-      <div className="w-full lg:w-[420px] card-warm p-8 flex flex-col items-center justify-center text-center">
+      <div className="w-full lg:w-[420px] gov-card p-8 flex flex-col items-center justify-center text-center">
         <svg className="w-10 h-10 text-ink-300 dark:text-ink-600 mb-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
         </svg>
@@ -54,7 +54,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
   };
 
   return (
-    <div className="w-full lg:w-[420px] card-warm p-5 flex flex-col">
+    <div className="w-full lg:w-[420px] gov-card p-5 flex flex-col">
       <div className="flex items-center justify-between pb-3 border-b border-[var(--border-color)]">
         <h3 className="font-display text-lg text-[var(--heading-color)]">
           {t('admin.details_title')}
@@ -131,7 +131,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
             <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
               {t('admin.details_status')}
             </label>
-            <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
+            <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="gov-input w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
               <option value="new">{t('admin.status_new')}</option>
               <option value="under_review">{t('admin.status_under_review')}</option>
               <option value="resolved">{t('admin.status_resolved')}</option>
@@ -141,7 +141,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
             <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
               {t('admin.col_category')}
             </label>
-            <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
+            <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="gov-input w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
               {CATEGORIES.map(c => (
                 <option key={c} value={c}>{t(`categories.${c}`)}</option>
               ))}
@@ -152,7 +152,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
           <label className="block text-[10px] font-mono uppercase tracking-wider text-ink-400 mb-1">
             {t('admin.details_priority')}
           </label>
-          <select value={editPriority} onChange={(e) => setEditPriority(e.target.value)} className="input-warm w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
+          <select value={editPriority} onChange={(e) => setEditPriority(e.target.value)} className="gov-input w-full px-2.5 py-1.5 text-[12px] cursor-pointer">
             <option value="high">{t('admin.priority_high')}</option>
             <option value="medium">{t('admin.priority_medium')}</option>
             <option value="low">{t('admin.priority_low')}</option>
@@ -167,13 +167,13 @@ export function FeedbackDetail({ feedback, onUpdate }) {
             onChange={(e) => setEditAdminNotes(e.target.value)}
             rows="3"
             placeholder={t('admin.details_notes_placeholder')}
-            className="input-warm w-full px-3 py-2 text-[12px] resize-y"
+            className="gov-input w-full px-3 py-2 text-[12px] resize-y"
           />
         </div>
         <button
           type="submit"
           disabled={updating}
-          className="btn-clay w-full py-2.5 text-[12px] inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+          className="btn-mara w-full py-2.5 text-[12px] inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
         >
           {updating ? t('common.saving') : t('admin.details_save')}
         </button>

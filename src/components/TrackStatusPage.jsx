@@ -65,19 +65,19 @@ export function TrackStatusPage({ referenceId, onBack }) {
         </p>
       </div>
 
-      <div className="card-warm p-5">
+      <div className="gov-card p-5">
         <form onSubmit={handleSearch} className="flex gap-2">
           <input
             type="text"
             value={refId}
             onChange={(e) => setRefId(e.target.value)}
             placeholder={t('track.placeholder')}
-            className="input-warm flex-1 px-3 py-2.5 text-[13px] font-mono"
+            className="gov-input flex-1 px-3 py-2.5 text-[13px] font-mono"
           />
           <button
             type="submit"
             disabled={loading}
-            className="btn-clay px-5 text-[13px] inline-flex justify-center items-center whitespace-nowrap cursor-pointer disabled:cursor-not-allowed"
+            className="btn-mara px-5 text-[13px] inline-flex justify-center items-center whitespace-nowrap cursor-pointer disabled:cursor-not-allowed"
           >
             {loading ? t('common.loading') : t('track.btn_search')}
           </button>

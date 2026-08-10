@@ -26,7 +26,7 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="card-warm p-5 space-y-4 h-fit">
+      <div className="gov-card p-5 space-y-4 h-fit">
         <div>
           <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('locations.add_title')}</h3>
           <p className="text-[11px] text-ink-400 mt-0.5">{t('locations.subtitle')}</p>
@@ -50,7 +50,7 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
               value={newLocName}
               onChange={handleLocNameChange}
               placeholder={t('locations.name_placeholder')}
-              className="input-warm w-full px-3 py-2 text-[13px]"
+              className="gov-input w-full px-3 py-2 text-[13px]"
             />
           </div>
           <div>
@@ -64,13 +64,13 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
               value={newLocId}
               onChange={(e) => setNewLocId(e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '-'))}
               placeholder={t('locations.id_placeholder')}
-              className="input-warm w-full px-3 py-2 text-[13px] font-mono"
+              className="gov-input w-full px-3 py-2 text-[13px] font-mono"
             />
           </div>
           <button
             type="submit"
             disabled={creating}
-            className="btn-clay w-full py-2.5 text-[12px] inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+            className="btn-mara w-full py-2.5 text-[12px] inline-flex justify-center items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
           >
             {creating ? (
               <>
@@ -85,7 +85,7 @@ export function LocationsManager({ locations, onAddLocation, onToggleStatus, onD
         </form>
       </div>
 
-      <div className="lg:col-span-2 card-warm p-5 flex flex-col space-y-3">
+      <div className="lg:col-span-2 gov-card p-5 flex flex-col space-y-3">
         <div>
           <h3 className="font-display text-[16px] text-[var(--heading-color)]">{t('locations.title')}</h3>
           <p className="text-[11px] text-ink-400 mt-0.5">{locations.length} {t('locations.subtitle')}</p>
