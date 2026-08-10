@@ -31,3 +31,6 @@ dist-ssr
 *.sln
 *.sw?
 
+# Opencode local skills/config (installed per-machine, not project code)
+.opencode/
+
