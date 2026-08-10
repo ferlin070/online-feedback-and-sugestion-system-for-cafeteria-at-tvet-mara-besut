@@ -139,7 +139,7 @@ function App() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[var(--bg-color)]">
+      <div className="bg-tvetmara min-h-screen flex flex-col bg-[var(--bg-color)]">
         <Header theme={theme} toggleTheme={toggleTheme} adminUser={null} onNavigateHome={() => {}} onNavigateLogin={() => {}} onLogout={() => {}} />
         <main className="flex-1 grid place-items-center">
           <div className="flex flex-col items-center gap-3">
@@ -160,7 +160,7 @@ function App() {
     : TABS;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg-color)]">
+    <div className="bg-tvetmara min-h-screen flex flex-col bg-[var(--bg-color)]">
       <Header
         theme={theme}
         toggleTheme={toggleTheme}
@@ -211,10 +211,10 @@ function App() {
             <div className="flex items-end justify-between flex-wrap gap-3">
               <div>
                 <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-clay-500">
-                  {t('admin.eyebrow', 'Pusat Kawalan')}
+                  {t('admin.eyebrow', 'Kafeteria TVET MARA Besut')}
                 </span>
                 <h1 className="font-display text-3xl tracking-tight text-[var(--heading-color)] mt-0.5">
-                  {t('admin.dashboard_title')}
+                  {t('admin.dashboard_title', 'Pusat Kawalan Aduan')}
                 </h1>
               </div>
               <button

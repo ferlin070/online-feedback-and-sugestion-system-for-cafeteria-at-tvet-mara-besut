@@ -41,6 +41,21 @@
     "password": "Password",
     "submit": "Log In"
   },
+  "home": {
+    "eyebrow": "TVET MARA Besut Cafeteria",
+    "title_a": "Your voice,",
+    "title_b": "is heard.",
+    "lede": "Complaints, suggestions, or praise for the TVET MARA Besut cafeteria — all reach management directly. No paper forms, no lost emails.",
+    "notice_tag": "Notice",
+    "notice_title": "Scan the QR code at the counter to submit feedback.",
+    "notice_body": "Each table has its own QR code. Scan, fill, submit — we'll review and respond in a reasonable time.",
+    "feat_fast_title": "Fast Response",
+    "feat_fast_desc": "Feedback received by management in real time.",
+    "feat_track_title": "Track Status",
+    "feat_track_desc": "Check feedback status using your reference ID.",
+    "feat_anon_title": "Anonymous",
+    "feat_anon_desc": "Option to submit feedback anonymously."
+  },
   "track": {
     "title": "Check Feedback Status",
     "btn_title": "Check Status",
@@ -52,7 +67,8 @@
     "error_general": "Error retrieving feedback. Please try again."
   },
   "admin": {
-    "dashboard_title": "Admin Dashboard",
+    "dashboard_title": "Feedback Control Center",
+    "eyebrow": "TVET MARA Besut Cafeteria",
     "nav_list": "Feedback List",
     "nav_reports": "Reports & Analytics",
     "filter_all": "All Categories",

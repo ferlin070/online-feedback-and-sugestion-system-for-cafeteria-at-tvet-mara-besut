@@ -1,6 +1,6 @@
-# Online Feedback and Suggestion System for Cafeteria at TVET Mara Besut
+# Sistem Aduan TVETMARA Besut
 
-Platform web berpusat untuk mengumpul, mengurus, dan menganalisis maklum balas/cadangan daripada pelanggan (pelajar/staf) kepada pihak pengurusan kafeteria.
+Platform web berpusat untuk mengumpul, mengurus, dan menganalisis maklum balas/cadangan daripada pelanggan (pelajar/staf) kepada pihak pengurusan kafeteria TVET MARA Besut.
 
 ## Pautan Pantas
 - [Arahan Pembangunan](ARAHAN_ANTIGRAVITY_Online_Feedback_System.md)

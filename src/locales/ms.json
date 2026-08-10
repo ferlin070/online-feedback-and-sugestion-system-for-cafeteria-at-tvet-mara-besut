@@ -41,7 +41,23 @@
     "password": "Kata Laluan",
     "submit": "Log Masuk"
   },
+  "home": {
+    "eyebrow": "Kafeteria TVET MARA Besut",
+    "title_a": "Suara anda,",
+    "title_b": "mendapat sambutan.",
+    "lede": "Aduan, cadangan, atau pujian untuk kafeteria TVET MARA Besut — semuanya sampai ke meja pengurusan. Tanpa borang kertas, tanpa emel yang hilang.",
+    "notice_tag": "Notis",
+    "notice_title": "Imbas QR di kaunter untuk hantar aduan.",
+    "notice_body": "Setiap meja ada kod QR tersendiri. Imbas, isi, hantar — kami akan semak dan maklum balas dalam masa yang berpatutan.",
+    "feat_fast_title": "Respons Pantas",
+    "feat_fast_desc": "Aduan diterima masa nyata oleh pengurusan.",
+    "feat_track_title": "Jejak Status",
+    "feat_track_desc": "Semak status aduan guna ID rujukan.",
+    "feat_anon_title": "Tanpa Nama",
+    "feat_anon_desc": "Pilihan hantar aduan secara tanpa nama."
+  },
   "track": {
+    "eyebrow": "Semakan Aduan",
     "title": "Semak Status Aduan",
     "btn_title": "Semak Status Aduan",
     "subtitle": "Masukkan ID rujukan yang anda terima selepas menghantar aduan untuk melihat status semasa.",
@@ -52,7 +68,8 @@
     "error_general": "Ralat mendapatkan maklum balas. Sila cuba lagi."
   },
   "admin": {
-    "dashboard_title": "Dashboard Pentadbir",
+    "dashboard_title": "Pusat Kawalan Aduan",
+    "eyebrow": "Kafeteria TVET MARA Besut",
     "nav_list": "Senarai Aduan",
     "nav_reports": "Laporan & Analitik",
     "filter_all": "Semua Kategori",
