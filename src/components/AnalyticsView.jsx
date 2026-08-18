@@ -26,11 +26,23 @@ function ChartCard({ title, subtitle, children, className = '' }) {
   );
 }
 
-export function AnalyticsView({ feedbacks, locations }) {
+export function AnalyticsView({ feedbacks, locations, onPrintReport }) {
   const { t } = useTranslation();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="space-y-4">
+      <div className="flex items-center justify-end">
+        <button
+          onClick={onPrintReport}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md border border-mara-blue-300 dark:border-mara-blue-800 text-mara-blue-700 dark:text-mara-blue-300 hover:bg-mara-blue-50 dark:hover:bg-mara-blue-900/30 transition-colors cursor-pointer"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M8 18h8v5H8v-5z" />
+          </svg>
+          {t('admin.print_pdf', 'Print PDF')}
+        </button>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <ChartCard
         title={t('reports.chart_category_title')}
         subtitle={t('reports.chart_category_subtitle', 'Taburan bidang maklum balas.')}
@@ -106,6 +118,7 @@ export function AnalyticsView({ feedbacks, locations }) {
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
+      </div>
     </div>
   );
 }

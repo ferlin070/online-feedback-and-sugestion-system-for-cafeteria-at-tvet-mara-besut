@@ -6,8 +6,16 @@ import { useAuth } from './hooks/useAuth';
 import { useLocations } from './hooks/useLocations';
 import { useTheme } from './hooks/useTheme';
 import { useFeedback } from './hooks/useFeedback';
-import { getStats } from './lib/chartData';
+import { getStats, formatTime } from './lib/chartData';
 import { exportToCsv } from './lib/csvExport';
+import {
+  buildAnalyticsReportHtml,
+  buildListReportHtml,
+  printHtml,
+  statusLabel,
+  priorityLabel,
+  categoryLabel,
+} from './lib/reportGenerator';
 
 import { Header, Footer } from './components/Header';
 import { HomePage } from './components/HomePage';
@@ -120,22 +128,43 @@ function App() {
   }, []);
 
   const handleExportCsv = useCallback(() => {
+    const stamp = new Date().toISOString().slice(0, 10);
     const columns = [
-      { key: 'id', label: 'ID' },
-      { key: 'description', label: 'Butiran' },
-      { key: 'category', label: 'Kategori' },
-      { key: 'priority', label: 'Prioriti' },
-      { key: 'status', label: 'Status' },
-      { key: 'location', label: 'Lokasi' },
-      { key: 'isAnonymous', label: 'Anonymous' },
+      { key: 'no', label: 'No' },
+      { key: 'date', label: t('admin.col_date') },
+      { key: 'category', label: t('admin.col_category') },
+      { key: 'priority', label: t('admin.col_priority') },
+      { key: 'status', label: t('admin.col_status') },
+      { key: 'location', label: t('admin.col_location') },
+      { key: 'isAnonymous', label: t('admin.details_anonymous') },
+      { key: 'description', label: t('form.description') },
+      { key: 'adminNotes', label: t('admin.details_notes') },
+      { key: 'id', label: t('admin.details_id') },
     ];
-    const data = filteredFeedbacks.map((fb) => ({
-      id: fb.id, description: fb.description, category: fb.category,
-      priority: fb.priority, status: fb.status, location: fb.location || '-',
-      isAnonymous: fb.isAnonymous ? 'Ya' : 'Tidak',
+    const data = filteredFeedbacks.map((fb, i) => ({
+      no: i + 1,
+      date: formatTime(fb.submittedAt),
+      category: categoryLabel(fb.category, t),
+      priority: priorityLabel(fb.priority, t),
+      status: statusLabel(fb.status, t),
+      location: fb.location || '-',
+      isAnonymous: fb.isAnonymous ? t('admin.details_anonymous_yes') : t('admin.details_anonymous_no'),
+      description: fb.description,
+      adminNotes: fb.adminNotes || '',
+      id: fb.id,
     }));
-    exportToCsv(data, columns, 'aduan-kafe.csv');
-  }, [filteredFeedbacks]);
+    exportToCsv(data, columns, `senarai-aduan-${stamp}.csv`);
+  }, [filteredFeedbacks, t]);
+
+  const handlePrintList = useCallback(() => {
+    const html = buildListReportHtml(filteredFeedbacks, filters, t);
+    printHtml(html);
+  }, [filteredFeedbacks, filters, t]);
+
+  const handlePrintAnalytics = useCallback(() => {
+    const html = buildAnalyticsReportHtml(feedbacks, locations, t);
+    printHtml(html);
+  }, [feedbacks, locations, t]);
 
   if (authLoading) {
     return (
@@ -217,15 +246,26 @@ function App() {
                   {t('admin.dashboard_title', 'Pusat Kawalan Aduan')}
                 </h1>
               </div>
-              <button
-                onClick={handleExportCsv}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md border border-mara-cyan-300 dark:border-mara-cyan-800 text-mara-cyan-700 dark:text-mara-cyan-300 hover:bg-mara-cyan-50 dark:hover:bg-mara-cyan-900/30 transition-colors cursor-pointer"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
-                </svg>
-                {t('admin.export_csv', 'Eksport CSV')}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleExportCsv}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md border border-mara-cyan-300 dark:border-mara-cyan-800 text-mara-cyan-700 dark:text-mara-cyan-300 hover:bg-mara-cyan-50 dark:hover:bg-mara-cyan-900/30 transition-colors cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+                  </svg>
+                  {t('admin.export_csv', 'Eksport CSV')}
+                </button>
+                <button
+                  onClick={handlePrintList}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-md border border-mara-blue-300 dark:border-mara-blue-800 text-mara-blue-700 dark:text-mara-blue-300 hover:bg-mara-blue-50 dark:hover:bg-mara-blue-900/30 transition-colors cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M8 18h8v5H8v-5z" />
+                  </svg>
+                  {t('admin.print_pdf', 'Print PDF')}
+                </button>
+              </div>
             </div>
 
             <StatsRow stats={stats} />
@@ -264,7 +304,7 @@ function App() {
             )}
 
             {dashboardTab === 'analytics' && (
-              <AnalyticsView feedbacks={feedbacks} locations={locations} />
+              <AnalyticsView feedbacks={feedbacks} locations={locations} onPrintReport={handlePrintAnalytics} />
             )}
 
             {dashboardTab === 'locations' && (

@@ -105,6 +105,8 @@
     "alert_critical_title": "Aduan Kritikal Baru!",
     "alert_critical_desc": "aduan kritikal tidak diselesaikan!",
     "dashboard_subtitle": "Memaparkan aduan dari pengguna secara masa nyata.",
+    "export_csv": "Eksport CSV",
+    "print_pdf": "Cetak PDF",
     "details_sender": "Pengirim",
     "details_date": "Dihantar pada",
     "details_no_selection_title": "Tiada Aduan Dipilih",
@@ -140,7 +142,18 @@
     "chart_trend_title": "Trend Bulanan Aduan",
     "chart_category_subtitle": "Analisis taburan bidang maklum balas yang diterima.",
     "chart_status_subtitle": "Status kemajuan pengurusan aduan semasa.",
-    "chart_trend_subtitle": "Melihat kestabilan aduan yang diterima sepanjang masa."
+    "chart_trend_subtitle": "Melihat kestabilan aduan yang diterima sepanjang masa.",
+    "report_analytics_title": "Laporan Analitik Aduan",
+    "report_analytics_subtitle": "Ringkasan statistik dan taburan maklum balas kafeteria.",
+    "report_list_title": "Senarai Aduan",
+    "report_list_subtitle": "Rekod lengkap maklum balas yang diterima.",
+    "generated_on": "Dijana pada",
+    "total_label": "Jumlah aduan",
+    "filter_applied": "Penapis",
+    "all_filters": "Semua penapis",
+    "distribution": "Taburan",
+    "resolve_rate": "Kadar selesai",
+    "priority_subtitle": "Tahap keutamaan aduan."
   },
   "categories": {
     "Makanan": "Makanan",

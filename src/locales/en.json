@@ -104,6 +104,8 @@
     "alert_critical_title": "New Critical Feedback!",
     "alert_critical_desc": "unresolved critical feedback!",
     "dashboard_subtitle": "Displaying user feedback in real time.",
+    "export_csv": "Export CSV",
+    "print_pdf": "Print PDF",
     "details_sender": "Sender",
     "details_date": "Submitted on",
     "details_no_selection_title": "No Feedback Selected",
@@ -139,7 +141,18 @@
     "chart_trend_title": "Monthly Feedback Trend",
     "chart_category_subtitle": "Analysis of feedback field distribution received.",
     "chart_status_subtitle": "Current progress status of feedback management.",
-    "chart_trend_subtitle": "Tracking the stability of feedback received over time."
+    "chart_trend_subtitle": "Tracking the stability of feedback received over time.",
+    "report_analytics_title": "Feedback Analytics Report",
+    "report_analytics_subtitle": "Summary of cafeteria feedback statistics and distribution.",
+    "report_list_title": "Feedback List",
+    "report_list_subtitle": "Complete record of feedback received.",
+    "generated_on": "Generated on",
+    "total_label": "Total feedback",
+    "filter_applied": "Filters",
+    "all_filters": "All filters",
+    "distribution": "Distribution",
+    "resolve_rate": "Resolution rate",
+    "priority_subtitle": "Feedback priority levels."
   },
   "categories": {
     "Makanan": "Food",
