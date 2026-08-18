@@ -11,7 +11,8 @@ service cloud.firestore {
     // Collection feedback
     match /feedback/{feedbackId} {
       allow create: if true; // public boleh hantar maklum balas
-      allow read, update, delete: if isAdmin(); // hanya admin boleh baca/urus
+      allow get: if true; // public boleh semak status aduan guna ID rujukan
+      allow list, update, delete: if isAdmin(); // hanya admin boleh senaraikan/ubah/padam
     }
 
     // Collection admins
