@@ -8,6 +8,35 @@ import { detectCategory, detectPriority } from '../lib/autoTag';
 
 const CATEGORIES = ['Umum', 'Makanan', 'Kebersihan', 'Kemudahan', 'Perkhidmatan'];
 
+const SUBMIT_COOLDOWN_MS = 30 * 1000;
+const RECENT_WINDOW_MS = 5 * 60 * 1000;
+const LOCAL_SUBMIT_LIMIT = 5;
+
+function getRecentSubmitCount() {
+  try {
+    const raw = localStorage.getItem('fb_submissions');
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    const cutoff = Date.now() - RECENT_WINDOW_MS;
+    const recent = arr.filter(ts => typeof ts === 'number' && ts >= cutoff);
+    if (recent.length !== arr.length) localStorage.setItem('fb_submissions', JSON.stringify(recent));
+    return recent;
+  } catch {
+    return [];
+  }
+}
+
+function recordSubmit() {
+  try {
+    const recent = getRecentSubmitCount();
+    recent.push(Date.now());
+    localStorage.setItem('fb_submissions', JSON.stringify(recent));
+  } catch {
+    // ignore storage errors (e.g. private mode)
+  }
+}
+
 export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError }) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -58,6 +87,23 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+
+    const localRecent = getRecentSubmitCount();
+    if (localRecent.length > 0) {
+      const last = localRecent[localRecent.length - 1];
+      const elapsed = Date.now() - last;
+      if (elapsed < SUBMIT_COOLDOWN_MS) {
+        setError(t('form.err_cooldown', 'Sila tunggu sebentar sebelum hantar lagi.'));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+    }
+    if (localRecent.length >= LOCAL_SUBMIT_LIMIT) {
+      setError(t('form.err_rate_limit', 'Terlalu banyak aduan baru-baru ini. Sila cuba sebentar lagi.'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
     try {
@@ -66,12 +112,14 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
       const feedbackId = newRef.id;
 
       let uploadedPhotoUrl = null;
+      let uploadedPhotoPath = null;
       if (photo) {
         const ext = photo.name.split('.').pop();
         const storagePath = `feedback_photos/${feedbackId}.${ext}`;
         const storageRef = ref(storage, storagePath);
         await uploadBytes(storageRef, photo, { contentType: photo.type });
         uploadedPhotoUrl = await getDownloadURL(storageRef);
+        uploadedPhotoPath = storagePath;
       }
 
       const detectedCat = detectCategory(formData.description, formData.category);
@@ -83,6 +131,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
         priority: detectedPrio,
         description: formData.description.trim(),
         photoUrl: uploadedPhotoUrl,
+        photoPath: uploadedPhotoPath,
         location: formData.location.trim() || null,
         locationId: formData.locationId || null,
         status: 'new',
@@ -92,6 +141,7 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
         isAnonymous: formData.isAnonymous,
       });
       onSuccess(feedbackId);
+      recordSubmit();
     } catch (err) {
       console.error('Error submitting feedback:', err);
       setError(`${t('form.err_submit', 'Gagal menghantar maklum balas')}: ${err.message || ''}`);

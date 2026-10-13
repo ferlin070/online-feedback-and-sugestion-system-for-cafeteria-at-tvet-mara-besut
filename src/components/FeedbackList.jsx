@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { StatusBadge, PriorityBadge } from './Badges';
+import { FeedbackPhoto } from './FeedbackPhoto';
 import { formatTime } from '../lib/chartData';
 
 export function FeedbackList({ feedbacks, selectedFeedback, onSelectFeedback, filters, onFiltersChange, locations }) {
@@ -114,7 +115,7 @@ export function FeedbackList({ feedbacks, selectedFeedback, onSelectFeedback, fi
               </div>
               {fb.photoUrl && (
                 <div className="w-11 h-11 shrink-0 rounded-md overflow-hidden border border-[var(--border-color)]">
-                  <img src={fb.photoUrl} alt="" className="w-full h-full object-cover" />
+                  <FeedbackPhoto feedback={fb} className="w-full h-full object-cover" />
                 </div>
               )}
             </button>

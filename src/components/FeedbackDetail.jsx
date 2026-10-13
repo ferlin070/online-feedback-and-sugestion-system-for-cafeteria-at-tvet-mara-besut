@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StatusBadge, PriorityBadge } from './Badges';
+import { FeedbackPhoto } from './FeedbackPhoto';
 import { formatTime } from '../lib/chartData';
 
 const CATEGORIES = ['Makanan', 'Kebersihan', 'Kemudahan', 'Perkhidmatan', 'Umum'];
@@ -76,7 +77,7 @@ export function FeedbackDetail({ feedback, onUpdate }) {
           rel="noopener noreferrer"
           className="mt-3 block rounded-md overflow-hidden border border-[var(--border-color)] relative group"
         >
-          <img src={feedback.photoUrl} alt="Lampiran" className="w-full h-36 object-cover" />
+          <FeedbackPhoto feedback={feedback} alt="Lampiran" className="w-full h-36 object-cover" />
           <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-sm bg-ink-900/70 text-sand-50 text-[10px] font-mono uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
             {t('admin.open_full_photo', 'Buka ↗')}
           </span>

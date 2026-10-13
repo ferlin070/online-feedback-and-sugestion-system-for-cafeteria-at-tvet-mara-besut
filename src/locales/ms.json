@@ -33,7 +33,9 @@
     "ref_id": "ID Rujukan Anda:",
     "ref_id_sub": "Sila simpan ID rujukan ini untuk rujukan masa hadapan.",
     "new_submission_btn": "Hantar Maklum Balas Lain",
-    "qr_location_label": "Anda sedang hantar aduan untuk:"
+    "qr_location_label": "Anda sedang hantar aduan untuk:",
+    "err_cooldown": "Sila tunggu sebentar sebelum hantar maklum balas lain.",
+    "err_rate_limit": "Terlalu banyak aduan baru-baru ini. Sila cuba sebentar lagi."
   },
   "login": {
     "title": "Log Masuk Pentadbir",

@@ -33,7 +33,9 @@
     "ref_id": "Your Reference ID:",
     "ref_id_sub": "Please keep this reference ID for future reference.",
     "new_submission_btn": "Submit Another Feedback",
-    "qr_location_label": "You are submitting feedback for:"
+    "qr_location_label": "You are submitting feedback for:",
+    "err_cooldown": "Please wait a moment before submitting another feedback.",
+    "err_rate_limit": "Too many feedback submissions recently. Please try again shortly."
   },
   "login": {
     "title": "Admin Login",
