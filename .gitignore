@@ -34,3 +34,5 @@ dist-ssr
 # Opencode local skills/config (installed per-machine, not project code)
 .opencode/
 
+
+.kilo/
