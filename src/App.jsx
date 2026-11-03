@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from './firebase';
+import { supabase, mapLocationFromRow } from './lib/supabase';
 import { useAuth } from './hooks/useAuth';
 import { useLocations } from './hooks/useLocations';
 import { useTheme } from './hooks/useTheme';
@@ -62,10 +61,15 @@ function App() {
     const locId = params.get('loc');
     if (locId) {
       setPage('form');
-      getDoc(doc(db, 'locations', locId))
-        .then((snap) => {
-          if (snap.exists() && snap.data().active) {
-            setCurrentLocation({ id: locId, ...snap.data() });
+      supabase
+        .from('locations')
+        .select('*')
+        .eq('id', locId)
+        .maybeSingle()
+        .then(({ data }) => {
+          const loc = mapLocationFromRow(data);
+          if (loc && loc.active) {
+            setCurrentLocation(loc);
           } else {
             setCurrentLocation({ id: locId, name: locId });
           }

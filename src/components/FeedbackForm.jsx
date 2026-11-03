@@ -1,8 +1,6 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase';
+import { supabase, BUCKET_PHOTOS, getPublicUrl } from '../lib/supabase';
 import { validateDescription } from '../utils';
 import { detectCategory, detectPriority } from '../lib/autoTag';
 
@@ -107,39 +105,41 @@ export function FeedbackForm({ currentLocation, onBack, onSuccess, initialError 
     setSubmitting(true);
     setError(null);
     try {
-      const feedbackColRef = collection(db, 'feedback');
-      const newRef = doc(feedbackColRef);
-      const feedbackId = newRef.id;
+      const feedbackId = crypto.randomUUID();
 
       let uploadedPhotoUrl = null;
       let uploadedPhotoPath = null;
       if (photo) {
         const ext = photo.name.split('.').pop();
-        const storagePath = `feedback_photos/${feedbackId}.${ext}`;
-        const storageRef = ref(storage, storagePath);
-        await uploadBytes(storageRef, photo, { contentType: photo.type });
-        uploadedPhotoUrl = await getDownloadURL(storageRef);
-        uploadedPhotoPath = storagePath;
+        const filePath = `${feedbackId}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from(BUCKET_PHOTOS)
+          .upload(filePath, photo, { contentType: photo.type, upsert: true });
+
+        if (uploadError) throw uploadError;
+        uploadedPhotoUrl = getPublicUrl(BUCKET_PHOTOS, filePath);
+        uploadedPhotoPath = filePath;
       }
 
       const detectedCat = detectCategory(formData.description, formData.category);
       const detectedPrio = detectPriority(formData.description, 'medium');
 
-      await setDoc(newRef, {
+      const { error: insertError } = await supabase.from('feedback').insert({
         id: feedbackId,
         category: detectedCat,
         priority: detectedPrio,
         description: formData.description.trim(),
-        photoUrl: uploadedPhotoUrl,
-        photoPath: uploadedPhotoPath,
+        photo_url: uploadedPhotoUrl,
+        photo_path: uploadedPhotoPath,
         location: formData.location.trim() || null,
-        locationId: formData.locationId || null,
+        location_id: formData.locationId || null,
+        cafeteria_id: currentLocation?.cafeteriaId || 'kafeteria-utama',
         status: 'new',
-        submittedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        adminNotes: null,
-        isAnonymous: formData.isAnonymous,
+        admin_notes: null,
+        is_anonymous: formData.isAnonymous,
       });
+
+      if (insertError) throw insertError;
       onSuccess(feedbackId);
       recordSubmit();
     } catch (err) {

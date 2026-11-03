@@ -1,55 +1,81 @@
-import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { db, auth } from '../firebase';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase, mapAdminFromRow } from '../lib/supabase';
 
 /**
- * Hook pengurusan autentikasi admin.
- * Mendengar perubahan state auth & sahkan admin dalam koleksi admins.
+ * Hook pengurusan autentikasi admin via Supabase Auth & admins table.
  */
 export function useAuth() {
   const [adminUser, setAdminUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setAuthLoading(true);
-      if (user) {
-        try {
-          const adminDocRef = doc(db, 'admins', user.uid);
-          const adminDocSnap = await getDoc(adminDocRef);
-          if (adminDocSnap.exists()) {
-            setAdminUser({ uid: user.uid, email: user.email, ...adminDocSnap.data() });
-            setAuthError(null);
-          } else {
-            setAuthError('Akses ditolak. Pengguna ini bukan admin berdaftar.');
-            await signOut(auth);
-            setAdminUser(null);
-          }
-        } catch (err) {
-          console.error('Error verifying admin status:', err);
-          setAuthError('Ralat memverifikasi status admin.');
-          setAdminUser(null);
-        }
+  const verifyAdmin = useCallback(async (user) => {
+    if (!user) {
+      setAdminUser(null);
+      setAuthLoading(false);
+      return;
+    }
+    try {
+      const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('uid', user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        setAdminUser({ ...mapAdminFromRow(data), email: data.email || user.email });
+        setAuthError(null);
       } else {
+        setAuthError('Akses ditolak. Pengguna ini bukan admin berdaftar.');
+        await supabase.auth.signOut();
         setAdminUser(null);
       }
+    } catch (err) {
+      console.error('Error verifying admin status:', err);
+      setAuthError('Ralat memverifikasi status admin.');
+      setAdminUser(null);
+    } finally {
       setAuthLoading(false);
-    });
-    return () => unsubscribe();
+    }
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted) {
+        verifyAdmin(data.session?.user ?? null);
+      }
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      verifyAdmin(session?.user ?? null);
+    });
+
+    return () => {
+      mounted = false;
+      authListener?.subscription?.unsubscribe();
+    };
+  }, [verifyAdmin]);
 
   const login = async (email, password) => {
     setAuthError(null);
-    await signInWithEmailAndPassword(auth, email.trim(), password);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+    if (error) throw error;
   };
 
   const logout = async () => {
     setAuthError(null);
-    await signOut(auth);
+    await supabase.auth.signOut();
     setAdminUser(null);
   };
 
   return { adminUser, authLoading, authError, setAuthError, login, logout };
 }
+
+export default useAuth;

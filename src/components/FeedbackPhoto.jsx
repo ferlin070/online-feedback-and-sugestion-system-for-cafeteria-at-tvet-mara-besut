@@ -1,67 +1,45 @@
 import { useState, useEffect } from 'react';
-import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../firebase';
+import { supabase, BUCKET_PHOTOS, getPublicUrl } from '../lib/supabase';
 
-function extractStoragePath(url) {
-  if (!url || typeof url !== 'string') return null;
-  if (url.startsWith('feedback_photos/') || url.startsWith('qr_codes/')) return url;
-  const marker = '/o/';
-  const idx = url.indexOf(marker);
-  if (idx === -1) return null;
-  const path = url.substring(idx + marker.length).split('?')[0];
-  try {
-    return decodeURIComponent(path);
-  } catch {
-    return path;
-  }
+function extractPhotoStorageKey(feedback) {
+  const path = feedback.photoPath || null;
+  if (path) return path.startsWith('feedback_photos/') ? path.slice(16) : path;
+  const url = feedback.photoUrl;
+  return url && typeof url === 'string' && !url.startsWith('http') ? url : null;
 }
 
 export function FeedbackPhoto({ feedback, className, alt }) {
   const [url, setUrl] = useState(null);
   const [failed, setFailed] = useState(false);
+  const { photoUrl, photoPath } = feedback || {};
 
   useEffect(() => {
-    let cancelled = false;
     setFailed(false);
-    setUrl(null);
-
-    const path = feedback.photoPath || extractStoragePath(feedback.photoUrl);
-
-    async function resolve() {
-      if (!feedback.photoUrl && !path) {
-        setFailed(true);
-        return;
-      }
-      if (feedback.photoUrl && feedback.photoUrl.startsWith('http')) {
-        setUrl(feedback.photoUrl);
-        return;
-      }
-      if (path) {
-        try {
-          const fresh = await getDownloadURL(ref(storage, path));
-          if (!cancelled) setUrl(fresh);
-        } catch {
-          if (!cancelled) setFailed(true);
-        }
-      } else {
-        setFailed(true);
-      }
+    if (!photoUrl && !photoPath) {
+      setUrl(null);
+      setFailed(true);
+      return;
     }
 
-    resolve();
-    return () => { cancelled = true; };
-  }, [feedback.photoUrl, feedback.photoPath]);
+    if (photoUrl && photoUrl.startsWith('http')) {
+      setUrl(photoUrl);
+      return;
+    }
 
-  const handleError = async () => {
-    const path = feedback.photoPath || extractStoragePath(feedback.photoUrl);
-    if (path) {
-      try {
-        const fresh = await getDownloadURL(ref(storage, path));
-        setUrl(fresh);
-        return;
-      } catch {
-        // fall through
-      }
+    const key = extractPhotoStorageKey({ photoUrl, photoPath });
+    if (key) {
+      setUrl(getPublicUrl(BUCKET_PHOTOS, key));
+    } else {
+      setUrl(null);
+      setFailed(true);
+    }
+  }, [photoUrl, photoPath]);
+
+  const handleError = () => {
+    const key = extractPhotoStorageKey({ photoUrl, photoPath });
+    if (key && url !== getPublicUrl(BUCKET_PHOTOS, key)) {
+      setUrl(getPublicUrl(BUCKET_PHOTOS, key));
+      return;
     }
     setFailed(true);
   };
@@ -88,3 +66,5 @@ export function FeedbackPhoto({ feedback, className, alt }) {
 
   return <img src={url} alt={alt || ''} onError={handleError} className={className} loading="lazy" />;
 }
+
+export default FeedbackPhoto;

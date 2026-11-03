@@ -1,37 +1,48 @@
-import { useState, useEffect } from 'react';
-import { collection, onSnapshot, doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useState, useEffect, useCallback } from 'react';
 import QRCode from 'qrcode';
-import { db, storage } from '../firebase';
+import { supabase, mapLocationFromRow, BUCKET_QR, getPublicUrl } from '../lib/supabase';
 
 /**
- * Hook pengurusan lokasi & kod QR.
+ * Hook pengurusan lokasi & kod QR via Supabase.
  */
 export function useLocations() {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    const locationsColRef = collection(db, 'locations');
-    const unsubscribe = onSnapshot(locationsColRef, (snapshot) => {
-      const locs = [];
-      snapshot.forEach((d) => {
-        locs.push({ id: d.id, ...d.data() });
-      });
-      setLocations(locs);
+  const fetchLocations = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('locations')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error loading locations:', error);
       setLoading(false);
-    }, (err) => {
-      console.error('Error listening to locations:', err);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+      return;
+    }
+    setLocations((data || []).map(mapLocationFromRow));
+    setLoading(false);
   }, []);
 
-  const addLocation = async (name, slugId) => {
+  useEffect(() => {
+    setLoading(true);
+    fetchLocations();
+
+    const channel = supabase
+      .channel('locations-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'locations' }, () => {
+        fetchLocations();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchLocations]);
+
+  const addLocation = async (name, slugId, cafeteriaId = 'kafeteria-utama') => {
     const sanitizedId = slugId.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
-    const exists = locations.some(l => l.id === sanitizedId);
-    if (exists) {
+    if (locations.some((l) => l.id === sanitizedId)) {
       throw new Error('LOCATION_EXISTS');
     }
 
@@ -40,25 +51,41 @@ export function useLocations() {
     const response = await fetch(qrDataUrl);
     const blob = await response.blob();
 
-    const qrStorageRef = ref(storage, `qr_codes/${sanitizedId}.png`);
-    await uploadBytes(qrStorageRef, blob, { contentType: 'image/png' });
-    const downloadUrl = await getDownloadURL(qrStorageRef);
+    const filePath = `${sanitizedId}.png`;
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET_QR)
+      .upload(filePath, blob, { contentType: 'image/png', upsert: true });
 
-    const locDocRef = doc(db, 'locations', sanitizedId);
-    await setDoc(locDocRef, {
+    if (uploadError) throw uploadError;
+
+    const downloadUrl = getPublicUrl(BUCKET_QR, filePath);
+
+    const { error: insertError } = await supabase.from('locations').insert({
       id: sanitizedId,
       name: name.trim(),
-      qrCodeUrl: downloadUrl,
+      qr_code_url: downloadUrl,
       active: true,
-      createdAt: serverTimestamp()
+      cafeteria_id: cafeteriaId,
     });
+
+    if (insertError) throw insertError;
+    await fetchLocations();
     return sanitizedId;
   };
 
   const toggleLocationStatus = async (loc) => {
-    const locRef = doc(db, 'locations', loc.id);
-    await updateDoc(locRef, { active: !loc.active });
+    const { error } = await supabase
+      .from('locations')
+      .update({ active: !loc.active })
+      .eq('id', loc.id);
+
+    if (error) throw error;
+    setLocations((prev) =>
+      prev.map((l) => (l.id === loc.id ? { ...l, active: !loc.active } : l))
+    );
   };
 
   return { locations, loading, addLocation, toggleLocationStatus };
 }
+
+export default useLocations;

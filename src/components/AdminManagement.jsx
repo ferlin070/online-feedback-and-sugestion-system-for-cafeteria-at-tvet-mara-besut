@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { supabase, createAdminClient, mapAdminFromRow } from '../lib/supabase';
 
 export function AdminManagement({ adminUser }) {
   const { t } = useTranslation();
@@ -18,10 +17,9 @@ export function AdminManagement({ adminUser }) {
   const loadAdmins = async () => {
     setLoading(true);
     try {
-      const snap = await getDocs(collection(db, 'admins'));
-      const list = [];
-      snap.forEach((d) => list.push({ uid: d.id, ...d.data() }));
-      setAdmins(list);
+      const { data, error: err } = await supabase.from('admins').select('*').order('name', { ascending: true });
+      if (err) throw err;
+      setAdmins((data || []).map(mapAdminFromRow));
       setLoaded(true);
     } catch (err) {
       console.error('Error loading admins:', err);
@@ -40,8 +38,26 @@ export function AdminManagement({ adminUser }) {
     setAdding(true);
     setError(null);
     try {
-      const uid = email.trim().toLowerCase().replace(/[^a-z0-9@._-]/g, '');
-      await setDoc(doc(db, 'admins', uid), { name: name.trim(), email: email.trim(), role: 'admin' });
+      let uid = crypto.randomUUID();
+      try {
+        const tempPassword = 'Admin#' + Math.random().toString(36).slice(-8);
+        const { data: signUpData } = await createAdminClient().auth.signUp({
+          email: email.trim(),
+          password: tempPassword,
+        });
+        if (signUpData?.user?.id) uid = signUpData.user.id;
+      } catch (authErr) {
+        console.warn('Could not auto-register in auth, inserting admin row:', authErr);
+      }
+
+      const { error: insertErr } = await supabase.from('admins').insert({
+        uid,
+        name: name.trim(),
+        email: email.trim(),
+        role: 'admin',
+        cafeteria_id: 'kafeteria-utama',
+      });
+      if (insertErr) throw insertErr;
       setEmail('');
       setName('');
       await loadAdmins();
@@ -56,7 +72,8 @@ export function AdminManagement({ adminUser }) {
   const handleRemove = async (uid) => {
     if (!confirm(t('admin.mgmt_confirm_remove', 'Anda pasti mahu membuang admin ini?'))) return;
     try {
-      await deleteDoc(doc(db, 'admins', uid));
+      const { error: delErr } = await supabase.from('admins').delete().eq('uid', uid);
+      if (delErr) throw delErr;
       setAdmins((prev) => prev.filter((a) => a.uid !== uid));
     } catch (err) {
       console.error('Error removing admin:', err);

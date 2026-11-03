@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { supabase, mapFeedbackFromRow } from '../lib/supabase';
 import { StatusBadge, PriorityBadge } from './Badges';
 import { formatTime } from '../lib/chartData';
 
@@ -23,9 +22,10 @@ export function TrackStatusPage({ referenceId, onBack }) {
     setError(null);
     setSearched(false);
     try {
-      const snap = await getDoc(doc(db, 'feedback', refId.trim()));
-      if (snap.exists()) {
-        setFeedback({ id: snap.id, ...snap.data() });
+      const { data, error: rpcErr } = await supabase.rpc('track_feedback', { p_id: refId.trim() });
+      if (rpcErr) throw rpcErr;
+      if (data && data.length > 0) {
+        setFeedback(mapFeedbackFromRow(data[0]));
       } else {
         setFeedback(null);
         setError(t('track.error_not_found', 'Aduan tidak ditemui. Sila semak ID rujukan anda.'));
